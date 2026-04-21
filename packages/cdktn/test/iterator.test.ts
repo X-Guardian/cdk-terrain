@@ -529,3 +529,26 @@ test("for expressions from iterators", () => {
     "${[ for key, val in toset(var.list): key]}",
   );
 });
+
+test("forExpressionForList with fromComplexList uses raw list, not map conversion", () => {
+  const app = Testing.app();
+  const stack = new TerraformStack(app, "test");
+  const variable = new TerraformVariable(stack, "list", {});
+  const it = TerraformIterator.fromComplexList(
+    variable.listValue as any,
+    "name",
+  );
+
+  new TestResource(stack, "test", {
+    name: Token.asString(
+      it.forExpressionForList(`val.id if val.name == "foo"`),
+    ),
+  });
+
+  const synth = JSON.parse(Testing.synth(stack));
+  // Should iterate the raw list, not the map conversion
+  expect(synth).toHaveProperty(
+    "resource.test_resource.test.name",
+    '${[ for key, val in var.list: val.id if val.name == "foo"]}',
+  );
+});

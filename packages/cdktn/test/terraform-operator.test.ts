@@ -78,3 +78,18 @@ test("Op.or renders correctly", () => {
     `"\${(true || true)}"`,
   );
 });
+
+// Regression tests for falsy right-hand operands
+test("Op.gt renders correctly with 0 as right operand", () => {
+  expect(resolveExpression(Op.gt(1, 0))).toMatchInlineSnapshot(`"\${(1 > 0)}"`);
+});
+test("Op.eq renders correctly with false as right operand", () => {
+  expect(resolveExpression(Op.eq(true, false))).toMatchInlineSnapshot(
+    `"\${(true == false)}"`,
+  );
+});
+test("Op.sub renders correctly with 0 as right operand", () => {
+  expect(resolveExpression(Op.sub(5, 0))).toMatchInlineSnapshot(
+    `"\${(5 - 0)}"`,
+  );
+});

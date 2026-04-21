@@ -322,7 +322,10 @@ export class OperatorExpression extends TFExpression {
     context.suppressBraces = true;
 
     const left = this.resolveArg(context, this.left);
-    const right = this.right ? this.resolveArg(context, this.right) : undefined;
+    const right =
+      this.right !== undefined
+        ? this.resolveArg(context, this.right)
+        : undefined;
 
     let expr = "";
     switch (this.operator) {
@@ -331,7 +334,7 @@ export class OperatorExpression extends TFExpression {
         break;
       }
       case "-": {
-        if (right) {
+        if (right !== undefined) {
           // subtraction
           expr = `(${left} - ${right})`;
         } else {
@@ -402,6 +405,7 @@ class ForExpression extends TFExpression {
   public resolve(context: IResolveContext): string {
     const suppressBraces = context.suppressBraces;
     context.suppressBraces = true;
+    context.iteratorContext = "FOR_EXPRESSION";
     const key = this.resolveArg(context, FOR_EXPRESSION_KEY);
     const value = this.resolveArg(context, FOR_EXPRESSION_VALUE);
     const input = this.resolveArg(context, this.input);
