@@ -161,7 +161,7 @@ export class CdktfProject {
   public stacksToRun: CdktfStack[] = [];
   // This means sth different in deploy / destroy
   private stopAllStacksThatCanNotRunWithout: (stackName: string) => void =
-    () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+    () => {};
 
   private ioHandler: CdktfProjectIOHandler;
 

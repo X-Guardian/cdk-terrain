@@ -26,8 +26,8 @@ export function traversalToReference(
   function onlyTakeTraversalPartsUntilFirstBracketPropertyAccess(
     traversals: TerraformTraversalPart[],
   ) {
-    let filtered = [];
-    let index = 0;
+    const filtered = [];
+    const index = 0;
 
     for (const traversal of traversals) {
       if ("segment" in traversal) {

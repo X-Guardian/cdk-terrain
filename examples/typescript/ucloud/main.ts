@@ -15,7 +15,7 @@ class MyStack extends TerraformStack {
       projectId: process.env.UCLOUD_PROJECT_ID || "",
     });
 
-    let images = new DataUcloudImages(this, "images", {
+    const images = new DataUcloudImages(this, "images", {
       availabilityZone: "cn-bj2-04",
       nameRegex: "^CentOS 8.2 64",
       imageType: "base",

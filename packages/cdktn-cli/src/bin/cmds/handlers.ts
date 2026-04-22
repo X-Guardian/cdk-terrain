@@ -201,7 +201,7 @@ export async function deploy(argv: any) {
   const skipProviderLock = argv.skipProviderLock;
 
   let outputsPath: string | undefined = undefined;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   let onOutputsRetrieved: (outputs: NestedTerraformOutputs) => void = () => {};
 
   if (argv.outputsFile) {
@@ -315,7 +315,7 @@ export async function get(argv: {
 }) {
   const printPerformanceInfo = argv.showPerformanceInfo
     ? startPerformanceMonitoring()
-    : () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+    : () => {};
 
   try {
     throwIfNotProjectDirectory();
@@ -451,7 +451,7 @@ export async function login(argv: { tfeHostname: string }) {
 export async function synth(argv: any) {
   const printPerformanceInfo = argv.showPerformanceInfo
     ? startPerformanceMonitoring()
-    : () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+    : () => {};
 
   try {
     await initializErrorReporting(askForCrashReportingConsent);
@@ -527,7 +527,7 @@ export async function output(argv: any) {
   const skipSynth = argv.skipSynth;
   const skipProviderLock = argv.skipProviderLock;
   let outputsPath: string | undefined = undefined;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   let onOutputsRetrieved: (outputs: NestedTerraformOutputs) => void = () => {};
 
   if (argv.outputsFile) {
