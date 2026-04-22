@@ -200,7 +200,7 @@ test("string index expression argument renders correctly", () => {
 
 test("null expression argument renders correctly", () => {
   expect(resolveExpression(Op.or(true, null))).toMatchInlineSnapshot(
-    `"\${(true || undefined)}"`,
+    `"\${(true || null)}"`,
   );
 });
 
