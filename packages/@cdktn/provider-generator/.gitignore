@@ -2,6 +2,7 @@
 **/*.js.map
 tsconfig.tsbuildinfo
 !tsconfig.json
+build
 edge-provider-bindings
 cdktf-provider-generator-*.tgz
 !test/generate-provider-tests.js

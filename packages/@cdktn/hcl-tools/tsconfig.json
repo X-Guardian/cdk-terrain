@@ -27,8 +27,10 @@
     "incremental": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "checkJs": false
+    "checkJs": false,
+    "rootDir": "./src",
+    "outDir": "./build"
   },
-  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.d.ts", "wasm/*"]
 }

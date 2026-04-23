@@ -1,6 +1,6 @@
 // Copyright (c) HashiCorp, Inc
 // SPDX-License-Identifier: MPL-2.0
-import { parse, convertFiles } from "../lib";
+import { parse, convertFiles } from "../src";
 import * as fs from "fs";
 import * as path from "path";
 

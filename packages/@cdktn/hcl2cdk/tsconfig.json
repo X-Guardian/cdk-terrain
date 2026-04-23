@@ -26,13 +26,15 @@
     "skipLibCheck": true,
     "target": "ES2018",
     "incremental": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "rootDir": "./src",
+    "outDir": "./build"
   },
   "files": [
     "ambient.d.ts"
   ],
   "include": [
-    "**/*.ts",
+    "src/**/*.ts",
   ],
   "exclude": [
     "node_modules",

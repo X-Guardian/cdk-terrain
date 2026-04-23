@@ -2,14 +2,14 @@
   "name": "@cdktn/provider-generator",
   "version": "0.0.0",
   "description": "Exposes API to generate Terraform CDK provider bindings",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "tsc",
-    "postbuild": "node ./lib/__tests__/edge-provider-schema/cli.js ./edge-provider-bindings",
+    "postbuild": "node ./build/__tests__/edge-provider-schema/cli.js ./edge-provider-bindings",
     "watch": "tsc -w",
     "watch-preserve-output": "tsc -w --preserveWatchOutput",
     "test": "jest",

@@ -29,11 +29,12 @@
     "incremental": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "checkJs": false
+    "checkJs": false,
+    "rootDir": "./src",
+    "outDir": "./build"
   },
   "include": [
-    "lib/**/*.ts",
-    "test/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",

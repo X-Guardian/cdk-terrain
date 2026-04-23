@@ -19,7 +19,6 @@ import { AttributeType } from "@cdktn/commons";
 import { getTypeAtPath } from "./terraformSchema";
 import { containsReference } from "./references";
 import { variableName } from "./variables";
-import { getChildWithValue } from "@cdktn/hcl2json/lib/syntax-tree";
 
 const tfBinaryOperatorsToCdktf = {
   logicalOr: "or",
@@ -486,7 +485,7 @@ function convertObjectExpressionToTs(
   return t.objectExpression(
     Object.entries(node.meta.items)
       .map(([key, value]) => {
-        const valueChild = getChildWithValue(node, value);
+        const valueChild = tex.getChildWithValue(node, value);
         if (!valueChild) {
           logger.error(`Unable to value for object key '${key}': ${value}`);
           return null;
