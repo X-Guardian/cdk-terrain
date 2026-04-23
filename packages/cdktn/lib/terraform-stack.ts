@@ -161,7 +161,6 @@ export class TerraformStack extends Construct {
     let curr: any = this.rawOverrides;
 
     while (parts.length > 1) {
-       
       const key = parts.shift()!;
 
       // if we can't recurse further or the previous value is not an
@@ -177,7 +176,6 @@ export class TerraformStack extends Construct {
       curr = curr[key];
     }
 
-     
     const lastKey = parts.shift()!;
     curr[lastKey] = value;
   }

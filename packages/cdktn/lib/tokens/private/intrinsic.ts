@@ -37,7 +37,6 @@ export class Intrinsic implements IResolvable {
     this.value = value;
   }
 
-   
   public resolve(_context: IResolveContext) {
     return this.value;
   }
