@@ -49,7 +49,7 @@ export class TerraformDynamicExpression implements IResolvable {
         // context.resolve is required for the iteratorContext to be correctly passed
         // to Lazy values within this.content
         return context.resolve(
-          forExpression(this.iterator._getForEachExpression(), this.content),
+          forExpression(this.iterator._getForExpressionInput(), this.content),
         );
       },
     });

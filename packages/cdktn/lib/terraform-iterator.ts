@@ -33,6 +33,13 @@ export interface ITerraformIterator {
    * @internal used by TerraformResource to set the for_each expression
    */
   _getForEachExpression(): any;
+
+  /**
+   * @internal input used when this iterator appears inside a for-expression
+   * body (keys / values / pluckProperty / forExpressionForList /
+   * forExpressionForMap / dynamic).
+   */
+  _getForExpressionInput(): any;
 }
 
 type ListType =
@@ -65,6 +72,17 @@ export abstract class TerraformIterator implements ITerraformIterator {
    * @internal used by TerraformResource to set the for_each expression
    */
   abstract _getForEachExpression(): any;
+
+  /**
+   * @internal input used when this iterator appears inside a for-expression
+   * body (keys / values / pluckProperty / forExpressionForList /
+   * forExpressionForMap / dynamic). Defaults to the for_each expression;
+   * subclasses that need a different shape in for-expression bodies
+   * (e.g. DynamicListTerraformIterator) can override.
+   */
+  public _getForExpressionInput(): any {
+    return this._getForEachExpression();
+  }
 
   /**
    * Creates a new iterator from a list
@@ -303,7 +321,7 @@ export abstract class TerraformIterator implements ITerraformIterator {
    */
   public keys(): IResolvable {
     return Token.asAny(
-      forExpression(this._getForEachExpression(), FOR_EXPRESSION_KEY),
+      forExpression(this._getForExpressionInput(), FOR_EXPRESSION_KEY),
     );
   }
 
@@ -315,7 +333,7 @@ export abstract class TerraformIterator implements ITerraformIterator {
    */
   public values(): IResolvable {
     return Token.asAny(
-      forExpression(this._getForEachExpression(), FOR_EXPRESSION_VALUE),
+      forExpression(this._getForExpressionInput(), FOR_EXPRESSION_VALUE),
     );
   }
 
@@ -328,7 +346,7 @@ export abstract class TerraformIterator implements ITerraformIterator {
   public pluckProperty(property: string): IResolvable {
     return Token.asAny(
       forExpression(
-        this._getForEachExpression(),
+        this._getForExpressionInput(),
         propertyAccess(FOR_EXPRESSION_VALUE, [property]),
       ),
     );
@@ -349,7 +367,9 @@ export abstract class TerraformIterator implements ITerraformIterator {
    * @param expression The expression to use in the for mapping
    */
   public forExpressionForList(expression: string | IResolvable) {
-    return Token.asAny(forExpression(this._getForEachExpression(), expression));
+    return Token.asAny(
+      forExpression(this._getForExpressionInput(), expression),
+    );
   }
 
   /**
@@ -373,7 +393,7 @@ export abstract class TerraformIterator implements ITerraformIterator {
   ) {
     return Token.asAny(
       forExpression(
-        this._getForEachExpression(),
+        this._getForExpressionInput(),
         valueExpression,
         keyExpression,
       ),
@@ -491,31 +511,25 @@ export class DynamicListTerraformIterator extends MapTerraformIterator {
   }
 
   /**
-   * @internal used by TerraformResource to set the for_each expression
+   * @internal used by TerraformResource to set the for_each expression.
+   * Always returns the map-wrapped form so each.key is the mapKeyAttributeName
+   * and entries are uniquely keyed.
    */
   public _getForEachExpression(): any {
-    // uses a Lazy value to be able to render a conversion into a map in the context of a TerraformResource
-    return Lazy.anyValue(
-      {
-        produce: (context) => {
-          switch (context.iteratorContext) {
-            case "FOR_EXPRESSION":
-              return this.list;
-            case "DYNAMIC_BLOCK": // fallthrough
-            default: // same as dynamic block, as this is the case when a iterator is passed to the root level of e.g. a resource
-              // Turn list into a map
-              // { for k,v in <input> : <keyExpression> => <valueExpression>}
-              return forExpression(
-                this.list, // input
-                FOR_EXPRESSION_VALUE, // valueExpression
-                Fn.lookupNested(FOR_EXPRESSION_VALUE, [
-                  this.mapKeyAttributeName,
-                ]), // keyExpression
-              );
-          }
-        },
-      },
-      { displayHint: "<iterator value>" },
+    // Turn list into a map: { for k,v in <input> : <keyExpression> => <valueExpression> }
+    return forExpression(
+      this.list,
+      FOR_EXPRESSION_VALUE,
+      Fn.lookupNested(FOR_EXPRESSION_VALUE, [this.mapKeyAttributeName]),
     );
+  }
+
+  /**
+   * @internal inside a for-expression body we walk the raw list so
+   * `[ for key, val in <list> : ... ]` iterates list elements once,
+   * rather than the doubly-wrapped form the for_each conversion produces.
+   */
+  public _getForExpressionInput(): any {
+    return this.list;
   }
 }
