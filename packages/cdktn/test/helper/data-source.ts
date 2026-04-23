@@ -5,6 +5,7 @@ import {
   TerraformDataSource,
   TerraformMetaArguments,
   StringMap,
+  StringMapMap,
   NumberMap,
   BooleanMap,
   AnyMap,
@@ -60,6 +61,10 @@ export class TestDataSource extends TerraformDataSource {
 
   public anyMap(key: string) {
     return new AnyMap(this, "any_map").lookup(key);
+  }
+
+  public get stringMapMap() {
+    return new StringMapMap(this, "string_map_map");
   }
 
   public get listValue() {

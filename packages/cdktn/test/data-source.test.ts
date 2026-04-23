@@ -91,6 +91,36 @@ test("with any map", () => {
   ).toMatchSnapshot();
 });
 
+test("with string map map - lookup returns StringMap reference", () => {
+  expect(
+    Testing.synthScope((stack) => {
+      new TestProvider(stack, "provider", {});
+
+      const dataSource = new TestDataSource(stack, "test", {
+        name: "foo",
+      });
+      new TestResource(stack, "test-resource", {
+        name: Token.asString(dataSource.stringMapMap.lookup("outer_key")),
+      });
+    }),
+  ).toMatchSnapshot();
+});
+
+test("with string map map - nested lookup produces correct reference", () => {
+  expect(
+    Testing.synthScope((stack) => {
+      new TestProvider(stack, "provider", {});
+
+      const dataSource = new TestDataSource(stack, "test", {
+        name: "foo",
+      });
+      new TestResource(stack, "test-resource", {
+        name: dataSource.stringMapMap.lookup("outer_key").lookup("inner_key"),
+      });
+    }),
+  ).toMatchSnapshot();
+});
+
 test("dependent data source", () => {
   expect(
     Testing.synthScope((stack) => {
