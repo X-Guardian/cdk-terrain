@@ -1,4 +1,5 @@
 {
+    "js/ts.tsdk.path": "node_modules/typescript/lib",
     "js/ts.tsdk.promptToUseWorkspaceVersion": true,
     "jest.jestCommandLine": "yarn jest",
     "jest.virtualFolders": [
@@ -11,5 +12,5 @@
         { "name": "hcl-tools", "rootPath": "packages/@cdktn/hcl-tools" },
         { "name": "provider-generator", "rootPath": "packages/@cdktn/provider-generator" },
         { "name": "provider-schema", "rootPath": "packages/@cdktn/provider-schema" }
-    ]
+    ],
 }
