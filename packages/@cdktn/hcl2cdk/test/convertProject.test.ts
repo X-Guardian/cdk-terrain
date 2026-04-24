@@ -10,7 +10,7 @@ import {
   ConstructsMakerProviderTarget,
 } from "@cdktn/commons";
 import { readSchema } from "@cdktn/provider-schema";
-import { convertProject, getTerraformConfigFromDir } from "../lib";
+import { convertProject, getTerraformConfigFromDir } from "../src";
 
 const providerRequirements = ["kreuzwerker/docker@ ~>2.15.0"];
 const CDKTF_CLI = path.resolve(

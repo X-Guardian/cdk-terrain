@@ -1,6 +1,6 @@
 // Copyright (c) HashiCorp, Inc
 // SPDX-License-Identifier: MPL-2.0
-import { convert } from "../../lib/index";
+import { convert } from "../../src/index";
 import * as fs from "fs-extra";
 import * as path from "path";
 import * as os from "os";
