@@ -13,4 +13,7 @@
         { "name": "provider-generator", "rootPath": "packages/@cdktn/provider-generator" },
         { "name": "provider-schema", "rootPath": "packages/@cdktn/provider-schema" }
     ],
+    "json.schemaDownload.trustedDomains": {
+        "https://unpkg.com/knip%406/schema.json": true
+    }
 }

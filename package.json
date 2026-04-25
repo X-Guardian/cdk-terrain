@@ -83,6 +83,7 @@
         "eslint-plugin-monorepo": "^0.3.2",
         "husky": ">=6",
         "infer-owner": "^1.0.4",
+        "knip": "^6.6.3",
         "lerna": "^8.2.1",
         "lint-staged": "^15.5.2",
         "prettier": "^3.8.1",
