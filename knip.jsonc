@@ -22,13 +22,8 @@
       "project": ["lib/**/*.ts", "test/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@types/json-stable-stringify",
         "@types/minimatch",
-        "@types/semver",
-        "jsii-docgen",
-        "json-stable-stringify",
-        "semver",
-        "yazl"
+        "jsii-docgen"
       ]
     },
     "packages/cdktn-cli": {
@@ -59,7 +54,6 @@
         "cross-fetch",
         "cross-spawn",
         "detect-port",
-        "esbuild",
         "esbuild-jest",
         "eslint-plugin-react-hooks",
         "https-proxy-agent",
@@ -92,12 +86,8 @@
       "project": ["src/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@cdktn/hcl-tools",
         "@cdktn/hcl2json",
-        "@cdktn/provider-generator",
-        "@cdktn/provider-schema",
         "@npmcli/ci-detect",
-        "@sentry/node",
         "@skorfmann/ink-confirm-input",
         "@skorfmann/terraform-cloud",
         "@types/detect-port",
@@ -107,19 +97,12 @@
         "@types/json-schema",
         "@types/lodash.isequal",
         "@types/nock",
-        "@types/node-fetch",
         "@types/parse-gitignore",
         "@types/react",
         "@types/scheduler",
-        "@types/semver",
         "@types/stream-buffers",
         "@types/uuid",
-        "cdktn",
-        "chalk",
-        "chokidar",
         "cli-spinners",
-        "codemaker",
-        "constructs",
         "cross-fetch",
         "detect-port",
         "esbuild",
@@ -128,8 +111,6 @@
         "execa",
         "extract-zip",
         "follow-redirects",
-        "https-proxy-agent",
-        "indent-string",
         "ink",
         "ink-select-input",
         "ink-spinner",
@@ -140,25 +121,18 @@
         "jsii-rosetta",
         "lodash.isequal",
         "log4js",
-        "minimatch",
-        "node-fetch",
         "open",
         "parse-gitignore",
-        "pkg-up",
         "react",
-        "semver",
-        "sscaff",
         "stream-buffers",
-        "strip-ansi",
         "tunnel-agent",
         "utility-types",
         "uuid",
-        "xml-js",
         "yargs",
         "yoga-layout-prebuilt",
-        "zod",
         // TODO: triage and add to package.json — each is imported but undeclared.
-        "@typescript-eslint/parser"
+        "@typescript-eslint/parser",
+        "ci-info"
       ]
     },
     "packages/@cdktn/commons": {
@@ -166,64 +140,37 @@
       "project": ["src/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@sentry/node",
-        "@types/follow-redirects",
-        "@types/uuid",
-        "@types/validator",
-        "cdktn",
-        "ci-info",
-        "codemaker",
-        "cross-spawn",
-        "follow-redirects",
-        "lint-staged",
-        "log4js",
-        "strip-ansi",
-        "uuid",
-        "validator"
+        "lint-staged"
       ]
     },
     "packages/@cdktn/hcl-tools": {
       "entry": ["src/index.ts"],
-      "project": ["src/**/*.ts"],
-      "ignoreDependencies": [
-        // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "fs-extra"
-      ]
+      "project": ["src/**/*.ts"]
     },
     "packages/@cdktn/hcl2cdk": {
       "entry": ["lib/index.ts"],
       "project": ["lib/**/*.ts", "test/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@types/deep-equal",
-        "@types/glob",
-        "@types/reserved-words",
-        "camelcase",
-        "cdktn",
-        "codemaker",
-        "deep-equal",
-        "reserved-words"
+        "@types/glob"
       ]
     },
     "packages/@cdktn/hcl2json": {
       "entry": ["lib/index.ts"],
-      "project": ["lib/**/*.ts", "test/**/*.ts"],
-      "ignoreDependencies": [
-        // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@types/fs-extra",
-        "fs-extra"
-      ]
+      "project": ["lib/**/*.ts", "test/**/*.ts"]
     },
     "packages/@cdktn/provider-generator": {
       "entry": ["lib/index.ts"],
       "project": ["lib/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@cdktn/provider-schema",
         "@types/deepmerge",
         "@types/glob",
         "@types/node",
-        "@types/reserved-words"
+        "@types/reserved-words",
+        // TODO: triage and add to package.json — each is imported but undeclared.
+        "jsii",
+        "jsii-pacmak"
       ]
     },
     "packages/@cdktn/provider-schema": {
@@ -231,10 +178,8 @@
       "project": ["src/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@cdktn/hcl2json",
         "@types/follow-redirects",
         "@types/uuid",
-        "deepmerge",
         "lint-staged"
       ]
     },
