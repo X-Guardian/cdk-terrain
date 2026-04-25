@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/* eslint-disable no-control-regex */
 import React from "react";
 
 import { useCdktfProject } from "./hooks/cdktf-project";

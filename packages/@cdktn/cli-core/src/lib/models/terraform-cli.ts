@@ -96,7 +96,7 @@ export class TerraformCli implements Terraform {
     private readonly abortSignal: AbortSignal,
     public readonly stack: SynthesizedStack,
     createTerraformLogHandler = (_phase: string, _filter?: OutputFilter[]) =>
-      (_stdout: string, _isErr = false) => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+      (_stdout: string, _isErr = false) => {},
   ) {
     this.workdir = stack.workingDirectory;
     this.onStdout =
@@ -130,7 +130,6 @@ export class TerraformCli implements Terraform {
       args.push("-migrate-state");
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     let initCanNotContinue = (_err: any) => {};
     const rejectsIfInitCanNotContinue = new Promise((_resolve, reject) => {
       initCanNotContinue = reject;
@@ -465,7 +464,7 @@ export class TerraformCli implements Terraform {
         noColor: true,
       },
       // We don't need to log the output here since we use it later on
-      () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+      () => {},
       this.onStderr("output"),
     );
 

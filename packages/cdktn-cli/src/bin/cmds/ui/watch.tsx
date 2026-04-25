@@ -44,7 +44,7 @@ export const Watch = ({
       {
         synthCommand,
         outDir: targetDir,
-        onUpdate: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        onUpdate: () => {},
         onLog: ({ stackName, message, messageWithConstructPath }) => {
           setLogEntries((prev) => [
             ...prev,

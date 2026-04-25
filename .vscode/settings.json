@@ -1,6 +1,16 @@
 {
-    "eslint.validate": [
-        "glimmer-ts",
-        "glimmer-js"
-    ]
+    "js/ts.tsdk.path": "node_modules/typescript/lib",
+    "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+    "jest.jestCommandLine": "yarn jest",
+    "jest.virtualFolders": [
+        { "name": "cdktn", "rootPath": "packages/cdktn" },
+        { "name": "cdktn-cli", "rootPath": "packages/cdktn-cli" },
+        { "name": "commons", "rootPath": "packages/@cdktn/commons" },
+        { "name": "cli-core", "rootPath": "packages/@cdktn/cli-core" },
+        { "name": "hcl2json", "rootPath": "packages/@cdktn/hcl2json" },
+        { "name": "hcl2cdk", "rootPath": "packages/@cdktn/hcl2cdk" },
+        { "name": "hcl-tools", "rootPath": "packages/@cdktn/hcl-tools" },
+        { "name": "provider-generator", "rootPath": "packages/@cdktn/provider-generator" },
+        { "name": "provider-schema", "rootPath": "packages/@cdktn/provider-schema" }
+    ],
 }

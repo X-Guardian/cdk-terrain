@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/* eslint-disable no-control-regex */
 import React, { useState } from "react";
 import { Text, Box } from "ink";
 import { DeployingResource, NestedTerraformOutputs } from "@cdktn/cli-core";
