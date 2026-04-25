@@ -1,0 +1,257 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  // Check both unused declared deps AND undeclared-but-imported (unlisted) deps.
+  "include": ["dependencies", "unlisted"],
+  "ignoreWorkspaces": ["examples/**"],
+  "workspaces": {
+    ".": {
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "changelog-parser",
+        "eslint-plugin-import",
+        "infer-owner",
+        "semver",
+        // TODO: triage and add to package.json — each is imported but undeclared.
+        "@typescript-eslint/parser",
+        "@typescript-eslint/eslint-plugin",
+        "@eslint/js"
+      ]
+    },
+    "packages/cdktn": {
+      "entry": ["lib/index.ts"],
+      "project": ["lib/**/*.ts", "test/**/*.ts"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "@types/json-stable-stringify",
+        "@types/minimatch",
+        "@types/semver",
+        "jsii-docgen",
+        "json-stable-stringify",
+        "semver",
+        "yazl"
+      ]
+    },
+    "packages/cdktn-cli": {
+      "entry": ["src/bin/cdktn.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "@cdktn/hcl-tools",
+        "@cdktn/hcl2json",
+        "@skorfmann/ink-confirm-input",
+        "@skorfmann/terraform-cloud",
+        "@types/archiver",
+        "@types/cli-table",
+        "@types/cross-spawn",
+        "@types/detect-port",
+        "@types/ink-spinner",
+        "@types/json-schema",
+        "@types/lodash.isequal",
+        "@types/nock",
+        "@types/parse-gitignore",
+        "@types/stream-buffers",
+        "cdktn",
+        "chokidar",
+        "ci-info",
+        "cli-spinners",
+        "codemaker",
+        "constructs",
+        "cross-fetch",
+        "cross-spawn",
+        "detect-port",
+        "esbuild",
+        "esbuild-jest",
+        "eslint-plugin-react-hooks",
+        "https-proxy-agent",
+        "indent-string",
+        "ink-use-stdout-dimensions",
+        "jsii",
+        "jsii-pacmak",
+        "jsii-rosetta",
+        "lodash.isequal",
+        "log4js",
+        "minimatch",
+        "node-fetch",
+        "parse-gitignore",
+        "sscaff",
+        "stream-buffers",
+        "tunnel-agent",
+        "utility-types",
+        "xml-js",
+        "yoga-layout-prebuilt",
+        "zod",
+        // TODO: triage and add to package.json — each is imported but undeclared.
+        "@typescript-eslint/parser",
+        "@cdktn/provider-schema",
+        "@npmcli/ci-detect",
+        "glob"
+      ]
+    },
+    "packages/@cdktn/cli-core": {
+      "entry": ["src/lib/index.ts"],
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "@cdktn/hcl-tools",
+        "@cdktn/hcl2json",
+        "@cdktn/provider-generator",
+        "@cdktn/provider-schema",
+        "@npmcli/ci-detect",
+        "@sentry/node",
+        "@skorfmann/ink-confirm-input",
+        "@skorfmann/terraform-cloud",
+        "@types/detect-port",
+        "@types/follow-redirects",
+        "@types/ink",
+        "@types/ink-spinner",
+        "@types/json-schema",
+        "@types/lodash.isequal",
+        "@types/nock",
+        "@types/node-fetch",
+        "@types/parse-gitignore",
+        "@types/react",
+        "@types/scheduler",
+        "@types/semver",
+        "@types/stream-buffers",
+        "@types/uuid",
+        "cdktn",
+        "chalk",
+        "chokidar",
+        "cli-spinners",
+        "codemaker",
+        "constructs",
+        "cross-fetch",
+        "detect-port",
+        "esbuild",
+        "esbuild-jest",
+        "eslint-plugin-react-hooks",
+        "execa",
+        "extract-zip",
+        "follow-redirects",
+        "https-proxy-agent",
+        "indent-string",
+        "ink",
+        "ink-select-input",
+        "ink-spinner",
+        "ink-testing-library",
+        "ink-use-stdout-dimensions",
+        "jsii",
+        "jsii-pacmak",
+        "jsii-rosetta",
+        "lodash.isequal",
+        "log4js",
+        "minimatch",
+        "node-fetch",
+        "open",
+        "parse-gitignore",
+        "pkg-up",
+        "react",
+        "semver",
+        "sscaff",
+        "stream-buffers",
+        "strip-ansi",
+        "tunnel-agent",
+        "utility-types",
+        "uuid",
+        "xml-js",
+        "yargs",
+        "yoga-layout-prebuilt",
+        "zod",
+        // TODO: triage and add to package.json — each is imported but undeclared.
+        "@typescript-eslint/parser"
+      ]
+    },
+    "packages/@cdktn/commons": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "@sentry/node",
+        "@types/follow-redirects",
+        "@types/uuid",
+        "@types/validator",
+        "cdktn",
+        "ci-info",
+        "codemaker",
+        "cross-spawn",
+        "follow-redirects",
+        "lint-staged",
+        "log4js",
+        "strip-ansi",
+        "uuid",
+        "validator"
+      ]
+    },
+    "packages/@cdktn/hcl-tools": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "fs-extra"
+      ]
+    },
+    "packages/@cdktn/hcl2cdk": {
+      "entry": ["lib/index.ts"],
+      "project": ["lib/**/*.ts", "test/**/*.ts"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "@types/deep-equal",
+        "@types/glob",
+        "@types/reserved-words",
+        "camelcase",
+        "cdktn",
+        "codemaker",
+        "deep-equal",
+        "reserved-words"
+      ]
+    },
+    "packages/@cdktn/hcl2json": {
+      "entry": ["lib/index.ts"],
+      "project": ["lib/**/*.ts", "test/**/*.ts"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "@types/fs-extra",
+        "fs-extra"
+      ]
+    },
+    "packages/@cdktn/provider-generator": {
+      "entry": ["lib/index.ts"],
+      "project": ["lib/**/*.ts"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "@cdktn/provider-schema",
+        "@types/deepmerge",
+        "@types/glob",
+        "@types/node",
+        "@types/reserved-words"
+      ]
+    },
+    "packages/@cdktn/provider-schema": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "@cdktn/hcl2json",
+        "@types/follow-redirects",
+        "@types/uuid",
+        "deepmerge",
+        "lint-staged"
+      ]
+    },
+    "tools/generate-function-bindings": {
+      "project": ["scripts/**/*.ts"],
+      "ignoreDependencies": [
+        // TODO: triage and remove entries — each is a declared dep with no detected usage.
+        "@cdktn/provider-generator",
+        "@eslint/eslintrc",
+        "cdktn",
+        "log4js",
+        // TODO: triage and add to package.json — each is imported but undeclared.
+        "@typescript-eslint/parser",
+        "eslint-plugin-prettier",
+        "@babel/parser",
+        "@cdktn/commons"
+      ]
+    }
+  }
+}
