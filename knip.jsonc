@@ -6,6 +6,7 @@
   "workspaces": {
     ".": {
       "ignoreDependencies": [
+        "lint-staged", // used by husky
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
         "changelog-parser",
         "eslint-plugin-import",
