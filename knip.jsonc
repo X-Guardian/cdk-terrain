@@ -10,11 +10,7 @@
         "changelog-parser",
         "eslint-plugin-import",
         "infer-owner",
-        "semver",
-        // TODO: triage and add to package.json — each is imported but undeclared.
-        "@typescript-eslint/parser",
-        "@typescript-eslint/eslint-plugin",
-        "@eslint/js"
+        "semver"
       ]
     },
     "packages/cdktn": {
@@ -55,7 +51,6 @@
         "cross-spawn",
         "detect-port",
         "esbuild-jest",
-        "eslint-plugin-react-hooks",
         "https-proxy-agent",
         "indent-string",
         "ink-use-stdout-dimensions",
@@ -75,7 +70,6 @@
         "yoga-layout-prebuilt",
         "zod",
         // TODO: triage and add to package.json — each is imported but undeclared.
-        "@typescript-eslint/parser",
         "@cdktn/provider-schema",
         "@npmcli/ci-detect",
         "glob"
@@ -107,7 +101,6 @@
         "detect-port",
         "esbuild",
         "esbuild-jest",
-        "eslint-plugin-react-hooks",
         "execa",
         "extract-zip",
         "follow-redirects",
@@ -131,7 +124,6 @@
         "yargs",
         "yoga-layout-prebuilt",
         // TODO: triage and add to package.json — each is imported but undeclared.
-        "@typescript-eslint/parser",
         "ci-info"
       ]
     },
@@ -188,12 +180,9 @@
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
         "@cdktn/provider-generator",
-        "@eslint/eslintrc",
         "cdktn",
         "log4js",
         // TODO: triage and add to package.json — each is imported but undeclared.
-        "@typescript-eslint/parser",
-        "eslint-plugin-prettier",
         "@babel/parser",
         "@cdktn/commons"
       ]
