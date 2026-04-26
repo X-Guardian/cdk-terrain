@@ -295,7 +295,7 @@ function convertScopeTraversalExpressionToTs(
     // numeric accessor, we don't have to do this additional work
     const resourcePath = getTfResourcePathFromNode(node);
     let usingSubPathType = false;
-    let parts = resourcePath.split(".").filter((p) => p !== "");
+    const parts = resourcePath.split(".").filter((p) => p !== "");
     const minParts = attributeIndex; // we need to stop before data.aws.resource_name or aws.resource_name
     const originalParts = parts.length;
     let hasMapAccessor = false;
@@ -438,7 +438,7 @@ function convertTemplateExpressionToTs(
   }
 
   let isScopedTraversal = false;
-  let expressions: t.Expression[] = [];
+  const expressions: t.Expression[] = [];
   for (const { node, expr } of parts) {
     if (
       tex.isScopeTraversalExpression(node) &&
@@ -519,7 +519,7 @@ function convertFunctionCallExpressionToTs(
     return t.callExpression(t.identifier(functionName), argumentExpressions);
   }
 
-  let transformedNode: tex.FunctionCallExpression = mapping.transformer
+  const transformedNode: tex.FunctionCallExpression = mapping.transformer
     ? mapping.transformer(node)
     : node;
 
@@ -629,14 +629,14 @@ function convertSplatExpressionToTs(
     node,
     node.meta.sourceExpression,
   )!;
-  let sourceExpression = convertTFExpressionAstToTs(
+  const sourceExpression = convertTFExpressionAstToTs(
     scope,
     sourceExpressionChild,
   );
 
   // We don't convert the relative expression because everything after the splat is going to be
   // a string
-  let relativeExpression = node.meta.eachExpression.startsWith(
+  const relativeExpression = node.meta.eachExpression.startsWith(
     node.meta.anonSymbolExpression,
   )
     ? node.meta.eachExpression.slice(node.meta.anonSymbolExpression.length)

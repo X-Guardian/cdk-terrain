@@ -24,7 +24,7 @@ async function getBinaryVersion(
   binary: string,
   versionCommand: string,
 ): Promise<string | undefined> {
-  const noOp = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+  const noOp = () => {};
   try {
     const result = await exec(
       binary,
@@ -360,7 +360,7 @@ export async function getPackageVersion(
   language: string,
   packageName: string,
 ): Promise<string | undefined> {
-  const noOp = async () => undefined; // eslint-disable-line @typescript-eslint/no-empty-function
+  const noOp = async () => undefined;
   const getLibraryVersionMap: Record<
     string,
     (name: string) => Promise<string | undefined>

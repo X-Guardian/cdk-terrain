@@ -54,7 +54,18 @@ staging=$(mktemp -d)
 cd ${staging}
 npm init -y > /dev/null
 # There's only one version in our local registry, so we don't need to specify a version here
-npm install --global-style cdktn-cli
+# Retry to ride out transient ECONNRESETs from Verdaccio's upstream fetch
+for attempt in 1 2 3; do
+  if npm install --install-strategy=shallow --fetch-retries=5 cdktn-cli; then
+    break
+  fi
+  if [ "$attempt" = "3" ]; then
+    echo "npm install failed after 3 attempts"
+    exit 1
+  fi
+  echo "npm install attempt $attempt failed, retrying in $((attempt * 10))s..."
+  sleep $((attempt * 10))
+done
 
 # stop the local registry now that we installed the CLI
 # Some tests install cdktn in an older version from NPM

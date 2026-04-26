@@ -36,7 +36,7 @@ describe("convert command", () => {
     await mkdtemp(async (cwd) => {
       await fs.writeFile(
         path.resolve(cwd, "cdktf.json"),
-        JSON.stringify({ terraformProviders: ["hashicorp/null@~> 2.0"] }),
+        JSON.stringify({ terraformProviders: ["hashicorp/null@~> 3.0"] }),
       );
       const result = await execa(cdktfBin, ["convert"], {
         stdio: "pipe",
