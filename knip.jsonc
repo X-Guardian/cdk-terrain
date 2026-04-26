@@ -116,6 +116,7 @@
         "log4js",
         "open",
         "parse-gitignore",
+        "prettier",
         "react",
         "stream-buffers",
         "tunnel-agent",

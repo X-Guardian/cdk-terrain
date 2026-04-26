@@ -93,6 +93,7 @@
   },
   "devDependencies": {
     "@cdktn/provider-generator": "0.0.0",
+    "@npmcli/ci-detect": "1.4.0",
     "@skorfmann/ink-confirm-input": "3.0.0",
     "@skorfmann/terraform-cloud": "1.15.0",
     "@types/cross-spawn": "6.0.6",
