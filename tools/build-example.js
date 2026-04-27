@@ -49,17 +49,17 @@ async function runInExample(command) {
 
 /**
  * Runs a command in the example, retrying on failure with linear backoff
- * (10s, 20s, ...). Used to ride out transient 5xx responses when terraform
+ * (30s, 60s, 90s, ...). Used to ride out transient 5xx responses when terraform
  * downloads providers during `cdktn get`.
  *
  * @param {string} command The lerna script to run in the example.
- * @param {number} [attempts=3] Maximum number of attempts before giving up.
- * @param {number} [backoffSeconds=10] Base delay in seconds; multiplied by
+ * @param {number} [attempts=5] Maximum number of attempts before giving up.
+ * @param {number} [backoffSeconds=30] Base delay in seconds; multiplied by
  *   the attempt number for linear backoff.
  * @returns {Promise<void>} Resolves when the command succeeds; rejects with
  *   the last error if every attempt fails.
  */
-async function runWithRetry(command, attempts = 3, backoffSeconds = 10) {
+async function runWithRetry(command, attempts = 5, backoffSeconds = 30) {
   for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
       return await runInExample(command);
