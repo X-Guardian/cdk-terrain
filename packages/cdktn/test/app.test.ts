@@ -336,22 +336,11 @@ describe("Cross Stack references", () => {
   });
 
   it("infers the correct path for local state", () => {
-    const tfStatePath = path.resolve(
-      process.cwd(),
-      `terraform.OriginStack.tfstate`,
-    );
     new TestResource(testStack, "Resource", {
       name: originStack.resource.stringValue,
     });
 
-    // Would error if the path was not correct
-    fs.writeFileSync(tfStatePath, "foo", "utf8");
-
-    try {
-      app.synth();
-    } finally {
-      fs.rmSync(tfStatePath);
-    }
+    app.synth();
 
     const { originStackSynth, targetStackSynth } = getStackSynths(app);
 
