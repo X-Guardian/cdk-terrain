@@ -47,9 +47,36 @@ async function runInExample(command) {
   }
 }
 
+/**
+ * Runs a command in the example, retrying on failure with linear backoff
+ * (30s, 60s, 90s, ...). Used to ride out transient 5xx responses when terraform
+ * downloads providers during `cdktn get`.
+ *
+ * @param {string} command The lerna script to run in the example.
+ * @param {number} [attempts=5] Maximum number of attempts before giving up.
+ * @param {number} [backoffSeconds=30] Base delay in seconds; multiplied by
+ *   the attempt number for linear backoff.
+ * @returns {Promise<void>} Resolves when the command succeeds; rejects with
+ *   the last error if every attempt fails.
+ */
+async function runWithRetry(command, attempts = 5, backoffSeconds = 30) {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      return await runInExample(command);
+    } catch (error) {
+      if (attempt === attempts) throw error;
+      const delaySeconds = attempt * backoffSeconds;
+      console.error(
+        `${command} attempt ${attempt} failed, retrying in ${delaySeconds}s...`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, delaySeconds * 1000));
+    }
+  }
+}
+
 async function main() {
   await runInExample(`reinstall`);
-  await runInExample(`build`);
+  await runWithRetry(`build`);
   await runInExample(`beforeSynth`);
   await runInExample(`synth`);
 }
