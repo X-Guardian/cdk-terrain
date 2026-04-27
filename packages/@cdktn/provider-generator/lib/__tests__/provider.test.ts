@@ -151,15 +151,15 @@ describe("Provider", () => {
   it("generates constructs for two providers with same name", async () => {
     const constraint = new TerraformProviderConstraint({
       name: "bitbucket",
-      namespace: "Runelab",
-      version: "2.1.0",
-      source: "Runelab/bitbucket",
+      namespace: "DrFaust92",
+      version: "2.51.0",
+      source: "DrFaust92/bitbucket",
     });
     const constraint2 = new TerraformProviderConstraint({
       name: "abitbucket",
-      namespace: "aeirola",
-      version: "2.0.2",
-      source: "aeirola/bitbucket",
+      namespace: "andsafe-AG",
+      version: "2.5.0",
+      source: "andsafe-AG/bitbucket",
     });
     return await mkdtemp(async (workdir) => {
       const jsiiPath = path.join(workdir, ".jsii");

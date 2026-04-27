@@ -37,7 +37,6 @@ export class Intrinsic implements IResolvable {
     this.value = value;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public resolve(_context: IResolveContext) {
     return this.value;
   }
