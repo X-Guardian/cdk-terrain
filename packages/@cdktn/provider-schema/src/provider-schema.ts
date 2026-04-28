@@ -23,6 +23,67 @@ import {
 
 const terraformBinaryName = process.env.TERRAFORM_BINARY_NAME || "terraform";
 
+// Provider binaries are downloaded from GitHub release CDNs during
+// `terraform init`, which intermittently returns 5xx. Retry on those
+// signatures only — real config/schema errors should still fail fast.
+const TRANSIENT_INIT_ERROR_PATTERNS = [
+  /\b50[234]\b/,
+  /Bad Gateway/i,
+  /Service Unavailable/i,
+  /Gateway Timeout/i,
+  /ECONNRESET/i,
+  /ETIMEDOUT/i,
+  /EAI_AGAIN/i,
+  /unexpected EOF/i,
+];
+
+/**
+ * Runs `terraform init` and retries on transient HTTP/network failures.
+ *
+ * Provider binaries are pulled from GitHub's release CDN, which
+ * intermittently returns 5xx. The retry only fires when stderr matches a
+ * known transient pattern — real errors (bad version, schema parse, etc.)
+ * still fail on the first attempt.
+ *
+ * @param options - spawn options forwarded to `exec` (`cwd` is required so
+ *   `terraform init` runs inside the temp dir holding `main.tf.json`)
+ * @param maxAttempts - total attempts including the initial call; the number
+ *   of retries is `maxAttempts - 1`. Defaults to 3 (1 initial + 2 retries)
+ * @param baseDelayMs - delay before the first retry. Tests pass `0` to skip
+ *   waits. Defaults to 1000ms
+ * @param backoffMultiplier - factor applied to the delay on each subsequent
+ *   retry (so retries wait `baseDelayMs * multiplier^(attempt-1)`). Defaults
+ *   to 2 (1s → 2s → 4s …)
+ * @returns stdout from the successful `terraform init` invocation
+ * @internal exposed for testing
+ */
+export async function terraformInitWithRetry(
+  options: { cwd: string },
+  maxAttempts = 3,
+  baseDelayMs = 1000,
+  backoffMultiplier = 2,
+): Promise<string> {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await exec(terraformBinaryName, ["init"], options);
+    } catch (error: any) {
+      const stderr: string = error?.stderr ?? "";
+      const transient = TRANSIENT_INIT_ERROR_PATTERNS.some((p) =>
+        p.test(stderr),
+      );
+      if (!transient || attempt === maxAttempts) {
+        throw error;
+      }
+      const delayMs = baseDelayMs * backoffMultiplier ** (attempt - 1);
+      console.error(
+        `terraform init failed with a transient error, retrying in ${delayMs}ms (attempt ${attempt}/${maxAttempts - 1})`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+  throw new Error("unreachable");
+}
+
 /**
  * Fully Qualified provider name in the format:
  * like e.g. registry.terraform.io/hashicorp/aws
@@ -205,7 +266,7 @@ export async function readProviderSchema(
     const filePath = path.join(outdir, "main.tf.json");
     await fs.writeFile(filePath, JSON.stringify(config));
 
-    await exec(terraformBinaryName, ["init"], { cwd: outdir });
+    await terraformInitWithRetry({ cwd: outdir });
     providerSchema = JSON.parse(
       await exec(terraformBinaryName, ["providers", "schema", "-json"], {
         cwd: outdir,
