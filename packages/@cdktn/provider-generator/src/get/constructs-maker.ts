@@ -205,7 +205,10 @@ export async function generateJsiiLanguage(
     if (opts.java) {
       const source = path.resolve(path.join(staging, "dist/java/src/"));
       const target = path.join(opts.java.outdir, "src/");
-      await fs.mkdirp(target); // make sure target directory exists
+      // Pre-create shared package directories.
+      const packageDir = opts.java.package.replace(/\./g, "/");
+      await fs.mkdirp(path.join(target, "main/java", packageDir));
+      await fs.mkdirp(path.join(target, "main/resources", packageDir));
       await fs.copy(source, target, { recursive: true, overwrite: false });
     }
 
