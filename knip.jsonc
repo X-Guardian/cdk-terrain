@@ -15,12 +15,7 @@
     },
     "packages/cdktn": {
       "entry": ["lib/index.ts"],
-      "project": ["lib/**/*.ts", "test/**/*.ts"],
-      "ignoreDependencies": [
-        // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@types/minimatch",
-        "jsii-docgen"
-      ]
+      "project": ["lib/**/*.ts", "test/**/*.ts"]
     },
     "packages/cdktn-cli": {
       "entry": ["src/bin/cdktn.ts"],
@@ -128,52 +123,25 @@
       ]
     },
     "packages/@cdktn/commons": {
-      "project": ["src/**/*.ts"],
-      "ignoreDependencies": [
-        // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "lint-staged"
-      ]
+      "project": ["src/**/*.ts"]
     },
     "packages/@cdktn/hcl-tools": {
       "project": ["src/**/*.ts"]
     },
     "packages/@cdktn/hcl2cdk": {
-      "project": ["src/**/*.ts", "test/**/*.ts"],
-      "ignoreDependencies": [
-        // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@types/glob"
-      ]
+      "project": ["src/**/*.ts", "test/**/*.ts"]
     },
     "packages/@cdktn/hcl2json": {
       "project": ["src/**/*.ts", "test/**/*.ts"]
     },
     "packages/@cdktn/provider-generator": {
-      "project": ["src/**/*.ts"],
-      "ignoreDependencies": [
-        // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@types/deepmerge",
-        "@types/glob",
-        "@types/node",
-        "@types/reserved-words"
-      ]
+      "project": ["src/**/*.ts"]
     },
     "packages/@cdktn/provider-schema": {
-      "project": ["src/**/*.ts"],
-      "ignoreDependencies": [
-        // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@types/follow-redirects",
-        "@types/uuid",
-        "lint-staged"
-      ]
+      "project": ["src/**/*.ts"]
     },
     "tools/generate-function-bindings": {
-      "project": ["scripts/**/*.ts"],
-      "ignoreDependencies": [
-        // TODO: triage and remove entries — each is a declared dep with no detected usage.
-        "@cdktn/provider-generator",
-        "cdktn",
-        "log4js"
-      ]
+      "project": ["scripts/**/*.ts"]
     }
   }
 }

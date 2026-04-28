@@ -1513,7 +1513,7 @@
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.127.0.tgz#5e5c1d38b0d5444b55158d03186c4a35b875af4c"
   integrity sha512-LJiQLjlyQuMx1KyoKDdU9SlxNe/3xnllPSTlb6alPL84aYAcrGQX82XX7v554AudesIZHp5p5u0bupTK+v3QWA==
 
-"@jsii/spec@1.128.0", "@jsii/spec@^1.127.0", "@jsii/spec@^1.128.0":
+"@jsii/spec@1.128.0", "@jsii/spec@^1.127.0":
   version "1.128.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.128.0.tgz#c7a536a070d455c8e2639517169c9d0ea6d51b25"
   integrity sha512-sv4JP3Ap7Vagh+yoCZ7mkfoKNY3ivV43QQPLzOYaNLgrTW86S+rqfiwTG/ouLn9qSaIC300vDpnT5V9uBGserA==
@@ -2679,7 +2679,7 @@
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.17.16.tgz#94ae78fab4a38d73086e962d0b65c30d816bfb0a"
   integrity sha512-HX7Em5NYQAXKW+1T+FiuG27NGwzJfCX3s1GjOa7ujxZa52kjJLOr4FUxT+giF6Tgxv1e+/czV/iTtBw27WTU9g==
 
-"@types/minimatch@*", "@types/minimatch@5.1.2", "@types/minimatch@^5.1.2":
+"@types/minimatch@*", "@types/minimatch@^5.1.2":
   version "5.1.2"
   resolved "https://registry.npmjs.org/@types/minimatch/-/minimatch-5.1.2.tgz#07508b45797cb81ec3f273011b054cd0755eddca"
   integrity sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==
@@ -7897,20 +7897,6 @@ jsesc@^3.0.2:
   resolved "https://registry.npmjs.org/jsesc/-/jsesc-3.1.0.tgz#74d335a234f67ed19907fdadfac7ccf9d409825d"
   integrity sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==
 
-jsii-docgen@10.11.16:
-  version "10.11.16"
-  resolved "https://registry.yarnpkg.com/jsii-docgen/-/jsii-docgen-10.11.16.tgz#e57b87f8e17957df27e973aa108acf8e6a5e253a"
-  integrity sha512-k1EnGdwQjYMoYfNqS3lkWwu/tnLTQc50j4Caf2PKpeK0Wv5fpuIFFuxISWgjrblyq7POJv04iz5jS4At0RMfyw==
-  dependencies:
-    "@jsii/spec" "^1.128.0"
-    case "^1.6.3"
-    fast-glob "^3.3.3"
-    fs-extra "^10.1.0"
-    jsii-reflect "^1.128.0"
-    json-stream-stringify "^3.1.6"
-    semver "^7.7.4"
-    yargs "^16.2.0"
-
 jsii-pacmak@1.112.0, jsii-pacmak@^1.112.0:
   version "1.112.0"
   resolved "https://registry.npmjs.org/jsii-pacmak/-/jsii-pacmak-1.112.0.tgz#5002e788f584c2155e11d2b40fcff43ff8040380"
@@ -8072,11 +8058,6 @@ json-stable-stringify@*, json-stable-stringify@1.3.0:
     isarray "^2.0.5"
     jsonify "^0.0.1"
     object-keys "^1.1.1"
-
-json-stream-stringify@^3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/json-stream-stringify/-/json-stream-stringify-3.1.6.tgz#ebe32193876fb99d4ec9f612389a8d8e2b5d54d4"
-  integrity sha512-x7fpwxOkbhFCaJDJ8vb1fBY3DdSa4AlITaz+HHILQJzdPMnHEFjxPwVUi1ALIbcIxDE0PNe/0i7frnY8QnBQog==
 
 json-stringify-nice@^1.1.4:
   version "1.1.4"
