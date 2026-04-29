@@ -27,7 +27,9 @@
     "stripInternal": true,
     "target": "ES2018",
     "incremental": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "rootDir": "./src",
+    "outDir": "./build"
   },
   "files": [
     "ambient.d.ts"

@@ -1,6 +1,6 @@
 // Copyright (c) HashiCorp, Inc
 // SPDX-License-Identifier: MPL-2.0
-import { getReferencesInExpression, getExpressionAst } from "../lib";
+import { getReferencesInExpression, getExpressionAst } from "../src";
 
 describe("getReferencesInExpression", () => {
   test.each([

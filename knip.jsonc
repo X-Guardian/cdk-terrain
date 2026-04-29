@@ -82,7 +82,6 @@
       ]
     },
     "packages/@cdktn/cli-core": {
-      "entry": ["src/lib/index.ts"],
       "project": ["src/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
@@ -136,7 +135,6 @@
       ]
     },
     "packages/@cdktn/commons": {
-      "entry": ["src/index.ts"],
       "project": ["src/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
@@ -144,24 +142,20 @@
       ]
     },
     "packages/@cdktn/hcl-tools": {
-      "entry": ["src/index.ts"],
       "project": ["src/**/*.ts"]
     },
     "packages/@cdktn/hcl2cdk": {
-      "entry": ["lib/index.ts"],
-      "project": ["lib/**/*.ts", "test/**/*.ts"],
+      "project": ["src/**/*.ts", "test/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
         "@types/glob"
       ]
     },
     "packages/@cdktn/hcl2json": {
-      "entry": ["lib/index.ts"],
-      "project": ["lib/**/*.ts", "test/**/*.ts"]
+      "project": ["src/**/*.ts", "test/**/*.ts"]
     },
     "packages/@cdktn/provider-generator": {
-      "entry": ["lib/index.ts"],
-      "project": ["lib/**/*.ts"],
+      "project": ["src/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.
         "@types/deepmerge",
@@ -174,7 +168,6 @@
       ]
     },
     "packages/@cdktn/provider-schema": {
-      "entry": ["src/index.ts"],
       "project": ["src/**/*.ts"],
       "ignoreDependencies": [
         // TODO: triage and remove entries — each is a declared dep with no detected usage.

@@ -1,6 +1,6 @@
 // Copyright (c) HashiCorp, Inc
 // SPDX-License-Identifier: MPL-2.0
-import { convert } from "../lib/index";
+import { convert } from "../src/index";
 
 describe("convert", () => {
   it("exposes stats for telemetry", async () => {

@@ -21,8 +21,8 @@
     "dist-clean": "rm -rf dist",
     "package:js": "./package.sh"
   },
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/open-constructs/cdk-terrain.git",

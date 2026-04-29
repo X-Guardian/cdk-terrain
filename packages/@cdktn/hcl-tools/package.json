@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/open-constructs/cdk-terrain",
   "license": "MPL-2.0",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc && ./build-go.sh",
     "watch": "tsc -w",

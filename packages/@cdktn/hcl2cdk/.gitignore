@@ -2,6 +2,7 @@
 **/*.js.map
 tsconfig.tsbuildinfo
 !tsconfig.json
+build
 cdktf-convert-*
 cdktf-provider*
 !ambient.d.ts

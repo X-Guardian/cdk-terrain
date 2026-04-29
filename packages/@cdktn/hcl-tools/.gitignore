@@ -5,4 +5,5 @@
 **/*wasm.gz
 tsconfig.tsbuildinfo
 wasm.md
+build
 !tsconfig.json
