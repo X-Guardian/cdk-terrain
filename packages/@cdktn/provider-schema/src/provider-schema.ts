@@ -48,9 +48,9 @@ const TRANSIENT_INIT_ERROR_PATTERNS = [
  * @param options - spawn options forwarded to `exec` (`cwd` is required so
  *   `terraform init` runs inside the temp dir holding `main.tf.json`)
  * @param maxAttempts - total attempts including the initial call; the number
- *   of retries is `maxAttempts - 1`. Defaults to 3 (1 initial + 2 retries)
+ *   of retries is `maxAttempts - 1`. Defaults to 5 (1 initial + 4 retries)
  * @param baseDelayMs - delay before the first retry. Tests pass `0` to skip
- *   waits. Defaults to 1000ms
+ *   waits. Defaults to 5000ms
  * @param backoffMultiplier - factor applied to the delay on each subsequent
  *   retry (so retries wait `baseDelayMs * multiplier^(attempt-1)`). Defaults
  *   to 2 (1s → 2s → 4s …)
@@ -59,8 +59,8 @@ const TRANSIENT_INIT_ERROR_PATTERNS = [
  */
 export async function terraformInitWithRetry(
   options: { cwd: string },
-  maxAttempts = 3,
-  baseDelayMs = 1000,
+  maxAttempts = 5,
+  baseDelayMs = 5000,
   backoffMultiplier = 2,
 ): Promise<string> {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -75,7 +75,7 @@ export async function terraformInitWithRetry(
         throw error;
       }
       const delayMs = baseDelayMs * backoffMultiplier ** (attempt - 1);
-      console.error(
+      console.log(
         `terraform init failed with a transient error, retrying in ${delayMs}ms (attempt ${attempt}/${maxAttempts - 1})`,
       );
       await new Promise((resolve) => setTimeout(resolve, delayMs));
