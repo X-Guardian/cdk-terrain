@@ -5,11 +5,11 @@ import { spawn, execSync } from "child_process";
 import * as execa from "execa";
 import { spawn as crossSpawn } from "cross-spawn";
 
-const os = require("os");
-const path = require("path");
-const fs = require("fs");
-const fse = require("fs-extra");
-const stripAnsi = require("strip-ansi");
+import * as os from "os";
+import * as path from "path";
+import * as fs from "fs";
+import * as fse from "fs-extra";
+import stripAnsi from "strip-ansi";
 
 function execSyncLogErrors(...args: Parameters<typeof execSync>) {
   try {
