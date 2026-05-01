@@ -11,7 +11,15 @@ on:
       - reopened
 
 jobs:
+  typecheck:
+    name: "Typecheck (gate)"
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'ci/skip-integration') && !contains(github.event.pull_request.labels.*.name, 'ci/unit-only') }}
+    uses: ./.github/workflows/typecheck.yml
+    with:
+      concurrency_group_prefix: pr-integration
+
   integration_test:
+    needs: typecheck
     name: "Integration Tests - PR"
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'ci/skip-integration') && !contains(github.event.pull_request.labels.*.name, 'ci/unit-only') }}
     uses: ./.github/workflows/integration.yml
@@ -22,7 +30,7 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     name: "Integration Tests - PR - Result"
-    needs: [integration_test]
+    needs: [typecheck, integration_test]
     steps:
       - run: exit 1
         if: >-

@@ -40,3 +40,8 @@ jobs:
       - name: run workspace linting
         run: |
           yarn lint:workspace
+
+  typecheck:
+    uses: ./.github/workflows/typecheck.yml
+    with:
+      concurrency_group_prefix: ${{ inputs.concurrency_group_prefix }}
