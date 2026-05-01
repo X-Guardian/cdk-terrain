@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 import { TemplateServer } from "./template-server";
 import { spawn, execSync } from "child_process";
-import * as execa from "execa";
+import execa from "execa";
 import { spawn as crossSpawn } from "cross-spawn";
 
 import * as os from "os";
