@@ -3,8 +3,8 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
+import { zipSync } from "fflate";
 import { assetCanNotCreateZipArchive } from "../errors";
-import { execSync } from "child_process";
 
 const HASH_LEN = 32;
 
@@ -50,71 +50,24 @@ export function copySync(src: string, dest: string) {
  * @param {string} dest
  */
 export function archiveSync(src: string, dest: string) {
-  // Run this module as a CLI to get around the synchronous limitation
   try {
-    execSync(`node ${__filename} ${src} ${dest}`, { encoding: "utf-8" });
+    const files: Record<string, Uint8Array> = {};
+    const walk = (dir: string, prefix: string) => {
+      for (const entry of fs.readdirSync(dir)) {
+        const full = path.join(dir, entry);
+        const zipPath = prefix ? `${prefix}/${entry}` : entry;
+        if (fs.statSync(full).isDirectory()) {
+          walk(full, zipPath);
+        } else {
+          files[zipPath] = fs.readFileSync(full);
+        }
+      }
+    };
+    walk(src, "");
+    fs.writeFileSync(dest, zipSync(files, { level: 9 }));
   } catch (err: any) {
     throw assetCanNotCreateZipArchive(src, dest, err);
   }
-}
-
-/**
- * Recursively adds all files under dir to the zip, preserving
- * relative paths
- * @param zip - the instance to add entries to
- * @param dir - absolute path of the directory to walk
- * @param prefix - the path prefix for entries within the zip (empty string for root)
- */
-function addDirectory(zip: any, dir: string, prefix: string) {
-  for (const entry of fs.readdirSync(dir)) {
-    const fullPath = path.join(dir, entry);
-    const zipPath = prefix ? `${prefix}/${entry}` : entry;
-    if (fs.statSync(fullPath).isDirectory()) {
-      addDirectory(zip, fullPath, zipPath);
-    } else {
-      zip.addFile(fullPath, zipPath, { compress: true, compressionLevel: 9 });
-    }
-  }
-}
-
-/**
- *
- * @param src
- * @param dest
- */
-async function runArchive(src: string, dest: string) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { ZipFile } = require("yazl");
-  const zip = new ZipFile();
-
-  addDirectory(zip, src, "");
-  zip.end();
-
-  return new Promise<void>((resolve, reject) => {
-    const output = fs.createWriteStream(dest);
-    zip.outputStream.pipe(output);
-    output.on("close", resolve);
-    output.on("error", reject);
-    zip.outputStream.on("error", reject);
-  });
-}
-
-// If this file is executed as a CLI we run archive directly
-// It's a bit of a hack due to us being restricted to synchronous functions
-// when there is no sync way to create a zip archive.
-// We get around this by using execSync and invoking this file as the CLI.
-// This only works for one function, but we only have this use-case once.
-if (require.main === module) {
-  const src = process.argv[2];
-  const dest = process.argv[3];
-  runArchive(src, dest)
-    .then(() => {
-      process.exit(0);
-    })
-    .catch((err) => {
-      console.error(err);
-      process.exit(1);
-    });
 }
 
 // eslint-disable-next-line jsdoc/require-jsdoc
