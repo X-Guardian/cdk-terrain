@@ -1,6 +1,6 @@
 // Copyright (c) HashiCorp, Inc
 // SPDX-License-Identifier: MPL-2.0
-import * as execa from "execa";
+import execa from "execa";
 import * as hasAnsi from "has-ansi";
 import { onPosix, TestDriver } from "../../test-helper";
 
