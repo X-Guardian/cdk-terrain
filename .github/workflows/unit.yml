@@ -64,26 +64,19 @@ jobs:
       - name: installing dependencies
         run: |
           yarn install --frozen-lockfile --prefer-offline
-      - name: compile
-        run: |
-          tools/align-version.sh
-          npx lerna run --scope '${{ inputs.package }}' build
-        env:
-          TERRAFORM_BINARY_NAME: "terraform${{ inputs.terraform_version }}"
-          GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}
-      - name: compile cdktn-cli and package
-        if: inputs.package == '@cdktn/hcl2cdk'
-        run: |
-          npx lerna run --scope 'cdktn-cli' build
-          yarn package
-        env:
-          TERRAFORM_BINARY_NAME: "terraform${{ inputs.terraform_version }}"
-          GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}
+      - name: align versions
+        run: tools/align-version.sh
       - name: test
+        # nx test runs the @nx/jest plugin target, with `^build` honored via
+        # nx.json targetDefaults — upstream packages are built automatically.
         run: |
           unset TF_PLUGIN_CACHE_DIR
-          npx lerna run --scope '${{ inputs.package }}' test:ci
+          npx nx test '${{ inputs.package }}' -- --ci --coverage --reporters=default --reporters=github-actions
         env:
           TERRAFORM_BINARY_NAME: "terraform${{ inputs.terraform_version }}"
           GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}
           CDKTF_EXPERIMENTAL_PROVIDER_SCHEMA_CACHE_PATH: ${{ steps.global-cache-dir-path.outputs.providerSchema }}
+
+      - name: Coverage summary
+        if: always()
+        run: node tools/test-coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
