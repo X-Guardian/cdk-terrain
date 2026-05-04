@@ -33,7 +33,9 @@ export class CdktfConfig {
   constructor(private cdktfConfigPath: string) {}
 
   private readCdktfConfig(): Record<string, unknown> {
-    const cdktfConfig = require(this.cdktfConfigPath);
+    const cdktfConfig = JSON.parse(
+      fs.readFileSync(this.cdktfConfigPath, "utf-8"),
+    );
     if (typeof cdktfConfig !== "object" || cdktfConfig === null) {
       throw Errors.External(
         "cdktf.json is malformed. The root must be a JSON object.",

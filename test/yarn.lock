@@ -824,6 +824,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/has-ansi@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@types/has-ansi/-/has-ansi-5.0.2.tgz#21d874bfb4a9534db0d279645a3af0964650965e"
+  integrity sha512-umJQ393eDf2R9eBdRxZTyXlRDq82ZVT9/tNfF3H3d2GDIBQILq/LZXHSvwXaH2OSvaSHVe2BX3s+IdoFHQ8zmg==
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.3.tgz#4ba8ddb720221f432e443bd5f9117fd22cfd4762"
