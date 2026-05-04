@@ -44,6 +44,7 @@
     "bundle"
   ],
   "dependencies": {
+    "@types/node": "20.19.1",
     "constructs": "10.6.0"
   },
   "peerDependencies": {
@@ -72,7 +73,6 @@
     "@sentry/node": "7.120.4",
     "@types/fs-extra": "8.1.5",
     "@types/jest": "30.0.0",
-    "@types/node": "20.19.1",
     "@types/pidusage": "2.0.5",
     "@types/react": "18.3.28",
     "@types/semver": "7.7.1",
