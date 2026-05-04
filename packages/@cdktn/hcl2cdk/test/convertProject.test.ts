@@ -239,7 +239,11 @@ describe.skip("convertProject", () => {
     fs.writeFileSync(
       path.resolve(targetPath, "cdktf.json"),
       JSON.stringify(
-        cdktfJson(require(path.resolve(targetPath, "cdktf.json"))),
+        cdktfJson(
+          JSON.parse(
+            fs.readFileSync(path.resolve(targetPath, "cdktf.json"), "utf-8"),
+          ),
+        ),
       ),
       "utf8",
     );
