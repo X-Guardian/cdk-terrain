@@ -425,6 +425,9 @@ export class TestDriver {
       "PATH",
       `${path.join(this.workingDirectory, ".venv", "bin")}:${process.env.PATH}`,
     );
+
+    // Upgrade pip to avoid wheel-installer assertion bugs on old wheels
+    await this.exec("pip install --upgrade pip");
   };
 
   readLocalFile = (fileName: string): string => {
