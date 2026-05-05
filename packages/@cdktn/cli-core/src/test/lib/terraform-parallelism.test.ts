@@ -5,12 +5,13 @@
 
 import path from "path";
 import * as fs from "fs-extra";
-import os from "os";
 import { EventEmitter } from "events";
 import { CdktfProject, init, get } from "../../lib/index";
 import { spawn } from "cross-spawn";
 import { exec, Language } from "@cdktn/commons";
-import { describeIfDistExists } from "../test-helpers";
+import { createTmpHelper, describeIfDistExists } from "../test-helpers";
+
+const tmp = createTmpHelper();
 
 // this is required for the get() call in beforeAll() to work
 let execMockActive = false;
@@ -105,7 +106,7 @@ const stackWithName = (name: string) => {
 
 describeIfDistExists(__dirname)("terraform parallelism", () => {
   beforeAll(async () => {
-    const workingDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf."));
+    const workingDirectory = tmp("cdktf.");
     await init({
       destination: workingDirectory,
       templatePath: path.join(__dirname, "../../../templates/typescript"),
@@ -147,7 +148,7 @@ describeIfDistExists(__dirname)("terraform parallelism", () => {
     execMockActive = true;
 
     inNewWorkingDirectory = function inNewWorkingDirectory() {
-      const wd = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf."));
+      const wd = tmp("cdktf.");
       const outDir = path.resolve(wd, "out");
 
       fs.copySync(workingDirectory, wd);

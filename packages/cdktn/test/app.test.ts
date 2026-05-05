@@ -17,14 +17,16 @@ import { FAIL_ON_CONSTRUCTS_OUTSIDE_OF_STACKS } from "../lib/features";
 import { version } from "../package.json";
 import fs = require("fs");
 import path = require("path");
-import os = require("os");
 import { Aspects } from "../lib/aspect";
 import { IConstruct } from "constructs";
 import { setupJest } from "../lib/testing/adapters/jest";
 import { TestProvider, TestResource } from "./helper";
 import { OtherTestResource } from "./helper/resource";
 import { TerraformOutput } from "../lib/terraform-output";
+import { createTmpHelper } from "./helper/tmp";
 setupJest();
+
+const tmp = createTmpHelper();
 
 test("context can be passed through CDKTF_CONTEXT", () => {
   process.env[CONTEXT_ENV] = JSON.stringify({
@@ -60,7 +62,7 @@ test("cdktfVersion is accessible in context", () => {
 });
 
 test("app synth does not throw error when validatons are disabled", () => {
-  const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+  const outdir = tmp("cdktf.outdir.");
   const app = Testing.stubVersion(
     new App({ stackTraces: false, outdir, skipValidation: true }),
   );
@@ -77,7 +79,7 @@ test("app synth does not throw error when validatons are disabled", () => {
 });
 
 test("app synth throws error when provider is missing", () => {
-  const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+  const outdir = tmp("cdktf.outdir.");
   const app = Testing.stubVersion(new App({ stackTraces: false, outdir }));
   const stack = new TerraformStack(app, "MyStack");
 
@@ -98,7 +100,7 @@ test("app synth throws error when provider is missing", () => {
 });
 
 test("app synth supports app level validations", () => {
-  const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+  const outdir = tmp("cdktf.outdir.");
   const app = Testing.stubVersion(new App({ stackTraces: false, outdir }));
 
   const mockValidation = {
@@ -118,7 +120,7 @@ test("app synth supports app level validations", () => {
 });
 
 test("app synth supports skipping app level validations", () => {
-  const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+  const outdir = tmp("cdktf.outdir.");
   const app = Testing.stubVersion(
     new App({ stackTraces: false, outdir, skipValidation: true }),
   );
@@ -133,7 +135,7 @@ test("app synth supports skipping app level validations", () => {
 });
 
 test("app synth executes Aspects", () => {
-  const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+  const outdir = tmp("cdktf.outdir.");
   const app = Testing.stubVersion(
     new App({ stackTraces: false, outdir, skipValidation: true }),
   );
@@ -181,7 +183,7 @@ test("app synth executes Aspects", () => {
 class MyResource extends TerraformResource {}
 
 test("app synth silently ignores constructs scoped to app instead of a stack by default", () => {
-  const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+  const outdir = tmp("cdktf.outdir.");
   const app = Testing.stubVersion(new App({ stackTraces: false, outdir }));
   const stack = new TerraformStack(app, "MyStack");
   new TestProvider(stack, "TestProvider", {});
@@ -217,7 +219,7 @@ test("app synth silently ignores constructs scoped to app instead of a stack by 
 });
 
 test("synthesis throws when a construct is scoped to app and failOnConstructsOutsideOfStacks is enabled", () => {
-  const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+  const outdir = tmp("cdktf.outdir.");
   const app = Testing.stubVersion(
     new App({
       stackTraces: false,
@@ -259,7 +261,7 @@ describe("Cross Stack references", () => {
   let testStack: TerraformStack;
 
   beforeEach(() => {
-    const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+    const outdir = tmp("cdktf.outdir.");
     app = Testing.stubVersion(new App({ stackTraces: false, outdir }));
     originStack = new OriginStack(app, "OriginStack");
     testStack = new TerraformStack(app, "TestStack");
@@ -361,7 +363,7 @@ describe("Cross Stack references", () => {
       name: originStack.resource.stringValue,
     });
 
-    const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+    const outdir = tmp("cdktf.outdir.");
     const targetPath = path.join(outdir, "terraform.tfstate");
     fs.writeFileSync(targetPath, "myState", "utf8");
     new LocalBackend(originStack, {
