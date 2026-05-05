@@ -126,5 +126,19 @@ function renderMarkdown(rows) {
   ].join("\n");
 }
 
-const rows = findSummaries("packages").map(rowFromSummary);
+/**
+ * True if every coverage metric on the row is a real number. Jest writes
+ * `"Unknown"` (a string) for packages with no tests under `passWithNoTests`,
+ * which makes the row noise rather than signal.
+ *
+ * @param {CoverageRow} row
+ * @returns {boolean}
+ */
+function hasNumericCoverage(row) {
+  return [row.s, row.b, row.f, row.l].every((v) => typeof v === "number");
+}
+
+const rows = findSummaries("packages")
+  .map(rowFromSummary)
+  .filter(hasNumericCoverage);
 console.log(renderMarkdown(rows));
