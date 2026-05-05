@@ -76,7 +76,7 @@ jobs:
         # nx.json targetDefaults — upstream packages are built automatically.
         run: |
           unset TF_PLUGIN_CACHE_DIR
-          yarn nx test '${{ inputs.package }}' -- --ci --coverage --reporters=default --reporters=github-actions
+          yarn nx test '${{ inputs.package }}' --ci --coverage --reporters=default --reporters=github-actions
         env:
           TERRAFORM_BINARY_NAME: "terraform${{ inputs.terraform_version }}"
           GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}
