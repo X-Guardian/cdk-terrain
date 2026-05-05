@@ -31,7 +31,7 @@ test("context can be passed through CDKTF_CONTEXT", () => {
     key1: "val1",
     key2: "val2",
   });
-  const prog = new App();
+  const prog = Testing.app({ stubVersion: false, enableFutureFlags: false });
   const node = prog.node;
   expect(node.tryGetContext("key1")).toEqual("val1");
   expect(node.tryGetContext("key2")).toEqual("val2");
@@ -42,7 +42,9 @@ test("context can be passed through CDKTF_CONTEXT", () => {
     key1: "val1",
     key2: "val2",
   });
-  const prog = new App({
+  const prog = Testing.app({
+    stubVersion: false,
+    enableFutureFlags: false,
     context: {
       key1: "val3",
       key2: "val4",
@@ -54,7 +56,7 @@ test("context can be passed through CDKTF_CONTEXT", () => {
 });
 
 test("cdktfVersion is accessible in context", () => {
-  const prog = new App();
+  const prog = Testing.app({ stubVersion: false, enableFutureFlags: false });
   const node = prog.node;
   expect(node.tryGetContext("cdktfVersion")).toEqual(version);
 });

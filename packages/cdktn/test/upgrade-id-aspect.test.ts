@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import { App, Aspects, MigrateIds, TerraformStack, Testing } from "../lib";
+import { Aspects, MigrateIds, TerraformStack, Testing } from "../lib";
 import { TestModule } from "./helper";
 
 describe("MigrateIds", () => {
   it("should add warning annoations for modules", () => {
-    const app = Testing.stubVersion(new App({ stackTraces: false }));
+    const app = Testing.app({ enableFutureFlags: false });
     const stack = new TerraformStack(app, "staging");
     new TestModule(stack, "vpc", {
       moduleParameter: "moduleValue",
