@@ -63,5 +63,12 @@
     "fs-extra": "11.3.4",
     "tsx": "4.6.1",
     "typescript": "5.4.5"
+  },
+  "nx": {
+    "targets": {
+      "test": {
+        "dependsOn": ["build", "^build", "cdktn-cli:build"]
+      }
+    }
   }
 }
