@@ -3,6 +3,7 @@
   // Check both unused declared deps AND undeclared-but-imported (unlisted) deps.
   "include": ["dependencies", "unlisted"],
   "ignoreWorkspaces": ["examples/**"],
+  "treatConfigHintsAsErrors": true,
   "workspaces": {
     ".": {
       "ignoreDependencies": [
@@ -63,11 +64,7 @@
         "utility-types",
         "xml-js",
         "yoga-layout-prebuilt",
-        "zod",
-        // TODO: triage and add to package.json — each is imported but undeclared.
-        "@cdktn/provider-schema",
-        "@npmcli/ci-detect",
-        "glob"
+        "zod"
       ]
     },
     "packages/@cdktn/cli-core": {
@@ -117,9 +114,7 @@
         "utility-types",
         "uuid",
         "yargs",
-        "yoga-layout-prebuilt",
-        // TODO: triage and add to package.json — each is imported but undeclared.
-        "ci-info"
+        "yoga-layout-prebuilt"
       ]
     },
     "packages/@cdktn/commons": {
