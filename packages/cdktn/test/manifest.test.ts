@@ -25,7 +25,7 @@ test("get stack manifest", () => {
   const outdir = tmp("cdktf.outdir.");
   const manifest = new Manifest("0.0.0", outdir, false);
 
-  const app = new App();
+  const app = Testing.app({ stubVersion: false, enableFutureFlags: false });
   const stackManifest = manifest.forStack(
     new TerraformStack(app, "this-is-a-stack"),
   );
@@ -47,7 +47,7 @@ test("write manifest", () => {
   const outdir = tmp("cdktf.outdir.");
   const manifest = new Manifest("0.0.0", outdir, false);
 
-  const app = new App();
+  const app = Testing.app({ stubVersion: false, enableFutureFlags: false });
   manifest.forStack(new TerraformStack(app, "this-is-a-stack"));
 
   manifest.writeToFile();
