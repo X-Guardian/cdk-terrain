@@ -4,7 +4,7 @@
 
 Three changes that together save ~16 min of aggregate CI compute per run:
 
-1. **Scoped builds** — Replace full monorepo `yarn build` with per-package `lerna run --scope` builds, saving ~35s per job across 14 non-hcl2cdk jobs.
+1. **Scoped builds** — Replace full monorepo `pnpm build` with per-package `lerna run --scope` builds, saving ~35s per job across 14 non-hcl2cdk jobs.
 2. **Parallel test execution** — Remove `--runInBand` from hcl2cdk tests. A new Jest `globalSetup` pre-generates all provider bindings and base projects once, eliminating the per-worker race conditions that originally forced serialization.
 3. **Provider schema pre-caching** — The `globalSetup` also pre-caches all 12 provider schemas using `CDKTF_EXPERIMENTAL_PROVIDER_SCHEMA_CACHE_PATH`, so test workers never shell out to `terraform init` / `terraform providers schema`. This eliminates the Terraform plugin cache collisions that caused test failures under parallelism.
 
@@ -77,8 +77,8 @@ Replaced the full monorepo build:
 - name: compile
   run: |
     tools/align-version.sh
-    yarn build
-    yarn package
+    pnpm build
+    pnpm package
 ```
 
 With a scoped build per package, plus a conditional step for hcl2cdk:
@@ -94,7 +94,7 @@ With a scoped build per package, plus a conditional step for hcl2cdk:
   if: inputs.package == '@cdktn/hcl2cdk'
   run: |
     npx lerna run --scope 'cdktn-cli' build
-    yarn package
+    pnpm package
 ```
 
 Nx integration (`build.dependsOn: ["^build"]`) automatically resolves and builds transitive dependencies. The `@cdktn/hcl2cdk` tests additionally need the `cdktn-cli` binary and `dist/` packages.
@@ -115,7 +115,7 @@ Nx integration (`build.dependsOn: ["^build"]`) automatically resolves and builds
 | ------------------------- | ------------------------------------------------------------------- |
 | hcl2cdk CI job wall clock | ~14m54s                                                             |
 | hcl2cdk test step alone   | ~11m27s (single-threaded `--runInBand`)                             |
-| Compile step per CI job   | full monorepo `yarn build` (~63s each, 16 jobs = ~15 min aggregate) |
+| Compile step per CI job   | full monorepo `pnpm build` (~63s each, 16 jobs = ~15 min aggregate) |
 
 ### After
 

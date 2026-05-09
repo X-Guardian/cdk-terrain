@@ -4,7 +4,6 @@
 
 custom_registry_url=localhost:4873
 original_npm_registry_url=`npm get registry`
-original_yarn_registry_url=`yarn config get registry`
 default_verdaccio_package=verdaccio@^6.5.2
 
 function startLocalRegistry {
@@ -25,15 +24,13 @@ function startLocalRegistry {
 
   # Set registry to local registry
   npm set registry "http://$custom_registry_url"
-  yarn config set registry "http://$custom_registry_url"
 
   # Append dummy token for auth, NPM will remove any duplicates for us
   echo "//${custom_registry_url%%/}/:_authToken=dummy" >> ~/.npmrc
 }
 
 function stopLocalRegistry {
-  # Restore the original NPM and Yarn registry URLs and stop Verdaccio
+  # Restore the original npm registry URL and stop Verdaccio
   npm set registry "$original_npm_registry_url"
-  yarn config set registry "$original_yarn_registry_url"
   kill $verdaccio_pid
 }

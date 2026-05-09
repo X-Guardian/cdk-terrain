@@ -7,7 +7,7 @@ scriptdir=$(cd $(dirname $0) && pwd)
 source "$scriptdir"/local-registry.sh
 
 function cleanup {
-  # Restore the original NPM and Yarn registry URLs and stop Verdaccio
+  # Restore the original npm registry URL and stop Verdaccio
   stopLocalRegistry
 }
 
@@ -37,7 +37,7 @@ cd ${CDKTF_DIST}
 # verify this is indeed a "dist" directory
 if [ ! -d "js" ] || [ ! -d "python" ] || [ ! -d "java" ] || [ ! -d "dotnet" ] || [ ! -d "go" ] ; then
   echo "ERROR: unable to find the subdirectories 'js', 'python', 'java', 'dotnet' and 'go' which should be in the 'dist' directory"
-  echo "Did you run 'yarn run package' to create the 'dist' directory?"
+  echo "Did you run 'pnpm package' to create the 'dist' directory?"
   exit 1
 fi
 

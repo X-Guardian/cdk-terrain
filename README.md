@@ -66,11 +66,11 @@ Download dependencies.
 
 ```bash
 cd cdk-terrain/
-yarn install
+pnpm install
 ```
 
 Build the project and packages.
 
 ```bash
-yarn build
+pnpm build
 ```

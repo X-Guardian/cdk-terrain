@@ -1,0 +1,14 @@
+packages:
+  - "packages/*"
+  - "packages/@cdktn/*"
+  - "examples/**"
+  - "tools/generate-function-bindings"
+
+overrides:
+  "@types/react": 18.3.28
+  jsii: 5.9.37
+
+onlyBuiltDependencies:
+  - esbuild
+  - nx
+  - unrs-resolver
