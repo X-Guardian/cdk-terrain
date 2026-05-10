@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "CDK Terrain CLI",
   "bin": {
-    "cdktn": "bundle/bin/cdktn"
+    "cdktn": "bin/cdktn"
   },
   "scripts": {
     "compile-build-config": "tsc build.ts --outDir build-config",
