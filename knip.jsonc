@@ -49,6 +49,9 @@
       "project": ["src/**/*.ts", "test/**/*.ts"]
     },
     "packages/@cdktn/provider-generator": {
+      // cli.ts is an entry point: invoked via `node ./build/__tests__/edge-provider-schema/cli.js`
+      // from the package's postbuild script.
+      "entry": ["src/__tests__/edge-provider-schema/cli.ts"],
       "project": ["src/**/*.ts"]
     },
     "packages/@cdktn/provider-schema": {
