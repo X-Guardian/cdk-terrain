@@ -1,25 +1,28 @@
 {
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx/tasks-runners/default",
-      "options": {
-        "cacheableOperations": [
-          "build",
-          "package"
-        ]
-      }
-    }
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/**/__tests__/**",
+      "!{projectRoot}/tsconfig.test.json"
+    ]
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"],
+      "outputs": [
+        "{projectRoot}/build",
+        "{projectRoot}/.jsii"
+      ],
+      "cache": true
     },
     "package": {
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"],
+      "inputs": ["production", "^production"],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true
     }
   }
 }
