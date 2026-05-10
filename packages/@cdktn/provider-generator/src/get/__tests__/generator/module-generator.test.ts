@@ -1,12 +1,14 @@
 // Copyright (c) HashiCorp, Inc
 // SPDX-License-Identifier: MPL-2.0
 import * as fs from "fs";
-import * as os from "os";
 import * as path from "path";
 import { Language, TerraformModuleConstraint } from "@cdktn/commons";
 import { ConstructsMaker } from "../../constructs-maker";
 import { expectModuleToMatchSnapshot } from "../util";
 import { execSync } from "child_process";
+import { createTmpHelper } from "../util";
+
+const tmp = createTmpHelper();
 
 const onTf1_6AndNewer = (
   name: string,
@@ -35,9 +37,7 @@ const onTf1_6AndNewer = (
 };
 
 test("generate some modules", async () => {
-  const workdir = fs.mkdtempSync(
-    path.join(os.tmpdir(), "module-generator.test"),
-  );
+  const workdir = tmp("module-generator.test");
   const constraint = new TerraformModuleConstraint(
     "terraform-aws-modules/eks/aws@7.0.1",
   );
@@ -74,9 +74,7 @@ expectModuleToMatchSnapshot("no newline", "generator", [
 test("generate multiple aws modules", async () => {
   jest.setTimeout(120000);
 
-  const workdir = fs.mkdtempSync(
-    path.join(os.tmpdir(), "module-generator-aws.test"),
-  );
+  const workdir = tmp("module-generator-aws.test");
   const constraints = [
     new TerraformModuleConstraint("terraform-aws-modules/vpc/aws@2.78.0"),
     new TerraformModuleConstraint("terraform-aws-modules/rds-aurora/aws@4.1.0"),
@@ -105,9 +103,7 @@ test("generate multiple aws modules", async () => {
 }, 120000);
 
 test("generate nested module", async () => {
-  const workdir = fs.mkdtempSync(
-    path.join(os.tmpdir(), "module-generator-nested.test"),
-  );
+  const workdir = tmp("module-generator-nested.test");
   const constraint = new TerraformModuleConstraint(
     "terraform-aws-modules/vpc/aws//modules/vpc-endpoints@3.19.0",
   );
@@ -146,9 +142,7 @@ onTf1_6AndNewer(
   async () => {
     jest.setTimeout(120000);
 
-    const workdir = fs.mkdtempSync(
-      path.join(os.tmpdir(), "module-generator.test-no-init"),
-    );
+    const workdir = tmp("module-generator.test-no-init");
     const constraint = new TerraformModuleConstraint(
       "milliHQ/next-js/aws@1.0.0-canary.5",
     );

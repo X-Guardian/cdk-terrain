@@ -8,12 +8,12 @@ import {
   App,
   Fn,
 } from "../lib";
-import fs = require("fs");
-import path = require("path");
-import os = require("os");
 import { TestResource, TestProvider } from "./helper";
 import { TerraformVariable } from "../lib/terraform-variable";
 import { IConstruct } from "constructs";
+import { createTmpHelper } from "./helper/tmp";
+
+const tmp = createTmpHelper();
 
 test("number output", () => {
   const app = Testing.app();
@@ -119,7 +119,7 @@ test("variable output", () => {
 
 test("static output id (without feature flags enabled)", () => {
   // we do this manually instead of using Testing.app() to skip enabling feature flags
-  const outdir = fs.mkdtempSync(path.join(os.tmpdir(), "cdktf.outdir."));
+  const outdir = tmp("cdktf.outdir.");
   const app = Testing.stubVersion(new App({ outdir, stackTraces: false }));
 
   const stack = new TerraformStack(app, "test");
