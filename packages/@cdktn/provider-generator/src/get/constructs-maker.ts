@@ -570,13 +570,16 @@ export class ConstructsMaker {
   }
 
   private async generateJsiiLanguage(target: ConstructsMakerTarget) {
-    // these are the module dependencies we compile against
-    const deps = ["@types/node", "constructs", "cdktn"];
+    // Module dependencies we compile against. Static require.resolve calls so
+    // knip / pnpm strict isolation can see the deps.
+    const deps = [
+      path.dirname(require.resolve("@types/node/package.json")),
+      path.dirname(require.resolve("constructs/package.json")),
+      path.dirname(require.resolve("cdktn/package.json")),
+    ];
     const opts: GenerateJSIIOptions = {
       entrypoint: target.fileName,
-      deps: deps.map((dep) =>
-        path.dirname(require.resolve(`${dep}/package.json`)),
-      ),
+      deps,
       moduleKey: target.moduleKey,
       exports: target.isProvider // Modules are small enough that we don't need this optimization
         ? {
