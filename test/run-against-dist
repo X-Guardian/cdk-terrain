@@ -45,7 +45,7 @@ echo "Publishing CLI from 'dist'..."
 for pkg in ${CDKTF_DIST}/js/*.tgz
 do
   echo $pkg
-  npm publish --force "$pkg"
+  npm publish --registry=http://localhost:4873/ --force "$pkg"
 done
 
 # install the CLI from dist/js in a temporary area and add to path
@@ -56,7 +56,7 @@ npm init -y > /dev/null
 # There's only one version in our local registry, so we don't need to specify a version here
 # Retry to ride out transient ECONNRESETs from Verdaccio's upstream fetch
 for attempt in 1 2 3; do
-  if npm install --install-strategy=shallow --fetch-retries=5 cdktn-cli; then
+  if npm install --registry=http://localhost:4873/ --install-strategy=shallow --fetch-retries=5 cdktn-cli; then
     break
   fi
   if [ "$attempt" = "3" ]; then
