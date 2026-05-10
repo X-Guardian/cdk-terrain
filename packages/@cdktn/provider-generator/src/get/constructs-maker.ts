@@ -116,7 +116,7 @@ export async function generateJsiiLanguage(
         moduleName,
       );
       await fs.mkdirp(path.dirname(targetdir));
-      await fs.copy(dir, targetdir);
+      await fs.copy(dir, targetdir, { dereference: true });
 
       // add to "deps" and "peer deps"
       if (!moduleName.startsWith("@types/")) {
