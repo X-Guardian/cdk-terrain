@@ -17,7 +17,7 @@
     },
     "packages/cdktn": {
       "entry": ["lib/index.ts"],
-      "project": ["lib/**/*.ts", "test/**/*.ts"]
+      "project": ["lib/**/*.ts", "test/**/*.ts", "scripts/**/*.mjs"]
     },
     "packages/cdktn-cli": {
       "entry": ["src/bin/cdktn.ts", "src/bin/cmds/handlers.ts", "build.ts"],

@@ -22,24 +22,12 @@
 //   regular nested node_modules layout (no symlinks), which jsii-pacmak +
 //   `npm pack` can bundle correctly. Outputs are copied back to packages/cdktn
 //   /dist/.
-//
-//   bundledDependencies is also derived here from the package.json's
-//   `dependencies` and written into the staging package.json. This avoids
-//   maintaining the same list in two places (every runtime dep MUST be
-//   bundled because language users have no `npm install` step).
 
 import { execFileSync } from "node:child_process";
-import {
-  rmSync,
-  mkdirSync,
-  cpSync,
-  existsSync,
-  readFileSync,
-  writeFileSync,
-} from "node:fs";
-import { createRequire } from "node:module";
+import { rmSync, mkdirSync, cpSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
+import { pacmak } from "jsii-pacmak";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const packageDir = resolve(__dirname, "..");
@@ -110,24 +98,6 @@ function copySourceFiles(sourceFiles) {
 }
 
 /**
- * Derive `bundledDependencies` from the staging package.json's runtime
- * `dependencies` and write the updated package.json back. Single source of
- * truth: every runtime dep is bundled (the JSII bindings have no other way to
- * acquire them at runtime). The checked-in cdktn/package.json deliberately
- * omits `bundledDependencies`; jsii-pacmak / npm pack only see the array form
- * via this staging copy.
- */
-function deriveBundledDependencies() {
-  const stagingPkgPath = join(stagingDir, "package.json");
-  const stagingPkg = JSON.parse(readFileSync(stagingPkgPath, "utf8"));
-  stagingPkg.bundledDependencies = Object.keys(stagingPkg.dependencies ?? {});
-  console.log(
-    `  bundledDependencies derived: [${stagingPkg.bundledDependencies.join(", ")}]`,
-  );
-  writeFileSync(stagingPkgPath, JSON.stringify(stagingPkg, null, 2) + "\n");
-}
-
-/**
  * Install runtime dependencies into the staging directory using npm. Produces
  * a flat/nested node_modules layout (no pnpm symlinks) suitable for npm pack.
  *
@@ -156,18 +126,18 @@ function installRuntimeDeps() {
 }
 
 /**
- * Run jsii-pacmak from the staging directory. Resolves the bin via
- * `require.resolve` so the script works under pnpm's isolated node_modules
- * layout, where `node_modules/.bin/jsii-pacmak` isn't a flat shim.
+ * Run jsii-pacmak against the staging directory via its programmatic API.
+ * Avoids spawning a Node subprocess and lets static analysers see the
+ * jsii-pacmak dependency.
  *
- * @param {string[]} targets jsii-pacmak `--targets` values; empty = all.
+ * @param {string[]} targets jsii-pacmak target names; empty = all.
  */
-function runJsiiPacmak(targets) {
+async function runJsiiPacmak(targets) {
   console.log("Running jsii-pacmak from staging...");
-  const localRequire = createRequire(import.meta.url);
-  const jsiiPacmakBin = localRequire.resolve("jsii-pacmak/bin/jsii-pacmak");
-  const args = targets.length > 0 ? ["--targets", ...targets] : [];
-  run("node", [jsiiPacmakBin, ...args], { cwd: stagingDir });
+  await pacmak({
+    inputDirectories: [stagingDir],
+    ...(targets.length > 0 ? { targets } : {}),
+  });
 }
 
 /**
@@ -200,9 +170,8 @@ const targets = process.argv.slice(2);
 const sourceFiles = resolveSourceFiles();
 prepareStagingDir();
 copySourceFiles(sourceFiles);
-deriveBundledDependencies();
 installRuntimeDeps();
-runJsiiPacmak(targets);
+await runJsiiPacmak(targets);
 runGoCopyrightHeader();
 moveDistOut();
 console.log("Done.");
