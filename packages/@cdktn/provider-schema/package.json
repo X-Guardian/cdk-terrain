@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "11.0.4",
+    "@types/jest": "30.0.0",
     "@types/json-stable-stringify": "1.2.0",
     "jest": "^30.3.0",
     "json-stable-stringify": "1.3.0",

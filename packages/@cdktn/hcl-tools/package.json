@@ -23,7 +23,7 @@
     "watch-preserve-output": "tsc -w --preserveWatchOutput",
     "test": "jest",
     "test:ci": "jest --ci",
-    "test:update": "jest -u --passWithNoTests",
+    "test:update": "jest -u",
     "jest-watch": "jest --watch",
     "package": "./package.sh",
     "dist-clean": "rm -rf dist",
@@ -45,6 +45,7 @@
     "fs-extra": "^11.3.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "11.0.4",
     "@types/jest": "30.0.0",
     "@types/node": "20.17.51",
     "jest": "^30.3.0",

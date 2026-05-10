@@ -71,6 +71,7 @@
     "@types/cross-spawn": "6.0.6",
     "@types/fs-extra": "8.1.5",
     "@types/jest": "30.0.0",
+    "@types/minimatch": "5.1.2",
     "@types/node": "20.19.1",
     "@types/node-fetch": "2.6.13",
     "@types/semver": "7.7.1",
