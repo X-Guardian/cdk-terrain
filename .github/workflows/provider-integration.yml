@@ -42,10 +42,12 @@ jobs:
         run: git config --global --add safe.directory /__w/cdk-terrain/cdk-terrain
       - name: ensure correct user
         run: chown -R root /__w/cdk-terrain
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: ".nvmrc"
-      - uses: ./.github/actions/setup-corepack-pnpm
+      - name: Setup corepack-managed pnpm
+        uses: ./.github/actions/setup-corepack-pnpm
       # Setup cache for go
       - name: Get cache directory paths
         id: global-cache-dir-path
@@ -105,10 +107,12 @@ jobs:
           path: dist
       - name: ensure correct user
         run: chown -R root /__w/cdk-terrain
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: ".nvmrc"
-      - uses: ./.github/actions/setup-corepack-pnpm
+      - name: Setup corepack-managed pnpm
+        uses: ./.github/actions/setup-corepack-pnpm
       - name: Get cache directory paths
         id: global-cache-dir-path
         run: |
@@ -143,10 +147,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: ".nvmrc"
-      - uses: ./.github/actions/setup-corepack-pnpm
+      - name: Setup corepack-managed pnpm
+        uses: ./.github/actions/setup-corepack-pnpm
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85
         with:
