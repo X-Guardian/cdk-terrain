@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 // Build the cdktn language packages via jsii-pacmak.
 //
 // Why this script exists:
