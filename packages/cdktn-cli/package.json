@@ -6,11 +6,11 @@
     "cdktn": "bundle/bin/cdktn"
   },
   "scripts": {
-    "compile-build-config": "tsc build.ts",
+    "compile-build-config": "tsc build.ts --outDir build-config",
     "prebuild": "pnpm compile-build-config",
     "build": "tsc --noEmit",
-    "postbuild": "node build.js",
-    "watch": "pnpm compile-build-config && node build.js --watch",
+    "postbuild": "node build-config/build.js",
+    "watch": "pnpm compile-build-config && node build-config/build.js --watch",
     "watch-preserve-output": "pnpm watch",
     "pretest": "pnpm build",
     "pretest:ci": "pnpm build",
