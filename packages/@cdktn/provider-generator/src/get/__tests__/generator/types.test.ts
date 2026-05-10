@@ -564,3 +564,50 @@ test("map of map of string attribute", async () => {
   );
   expect(output).toMatchSnapshot();
 });
+
+test("case-insensitive base name collision", async () => {
+  const code = new CodeMaker();
+  const workdir = fs.mkdtempSync(
+    path.join(os.tmpdir(), "case-insensitive-base-name-collision.test"),
+  );
+  const spec = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        __dirname,
+        "fixtures",
+        "case-insensitive-base-name-collision.test.fixture.json",
+      ),
+      "utf-8",
+    ),
+  );
+  new TerraformProviderGenerator(code, spec).generateAll();
+  await code.save(workdir);
+
+  const files = fs.readdirSync(path.join(workdir, "providers/oci"));
+  const topLevelFiles = ["index.ts", "lazy-index.ts"];
+
+  // Verify that colliding base names are disambiguated with a "-a" suffix.
+  expect(files).toContain("load-balancer-backend-set");
+  expect(files).toContain("load-balancer-backendset-a");
+
+  expect(files).toContain("data-oci-load-balancer-backend-sets");
+  expect(files).toContain("data-oci-load-balancer-backendsets-a");
+
+  // No two directories should collide case-insensitively
+  const lowercaseFiles = files.map((f) => f.toLowerCase());
+  const uniqueLowercaseFiles = [...new Set(lowercaseFiles)];
+  expect(lowercaseFiles).toEqual(uniqueLowercaseFiles);
+
+  for (const file of files) {
+    const output = fs.readFileSync(
+      path.join(
+        workdir,
+        "providers/oci/",
+        file,
+        topLevelFiles.includes(file) ? "" : "index.ts",
+      ),
+      "utf-8",
+    );
+    expect(output).toMatchSnapshot(file);
+  }
+});
