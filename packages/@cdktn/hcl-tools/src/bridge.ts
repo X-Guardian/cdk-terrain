@@ -28,7 +28,13 @@ function goBridge(getBytes: Promise<Buffer>) {
     await import(`../wasm/bridge_wasm_exec.js`);
     const go = new (global as any).Go();
     const bytes = await getBytes;
-    const result = await WebAssembly.instantiate(bytes, go.importObject);
+    // Wrap in Uint8Array to unambiguously satisfy the BufferSource overload
+    // of WebAssembly.instantiate (overload selection differs between
+    // @types/node versions otherwise).
+    const result = await WebAssembly.instantiate(
+      new Uint8Array(bytes),
+      go.importObject,
+    );
     (global as any).__hcl_helpers_config_wasm__ = jsRoot;
     void go.run(result.instance);
     ready = true;
