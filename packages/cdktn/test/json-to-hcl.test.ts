@@ -979,16 +979,16 @@ test("pass variables", () => {
     },
   });
   expect(Testing.synthHcl(stack)).toMatchInlineSnapshot(`
-    "
-    module "test" {
-    param1 = "name"
-    param2 = 1
-    param3 = [
-    "id1",
-    "id2",
-    ]
-    source = "./assets/__cdktf_module_asset_26CE565C/hash/test/fixtures/hcl-module"
-    }"
+   "
+   module "test" {
+   param1 = "name"
+   param2 = 1
+   param3 = [
+   "id1",
+   "id2",
+   ]
+   source = "./assets/__cdktf_module_asset_26CE565C/hash/hcl-module"
+   }"
   `);
 });
 
@@ -1009,26 +1009,26 @@ test("simple provider", () => {
     providers: [provider],
   });
   expect(Testing.synthHcl(stack)).toMatchInlineSnapshot(`
-    "terraform {
-    required_providers {
-      test = {
-    version = "~> 2.0"
-    }
-    }
+   "terraform {
+   required_providers {
+     test = {
+   version = "~> 2.0"
+   }
+   }
 
 
-    }
+   }
 
-    provider "test" {
-    access_key = "key"
-    alias = "provider1"
-    }
-    module "test" {
-    source = "./assets/__cdktf_module_asset_26CE565C/hash/test/fixtures/hcl-module"
-    providers = {
-    test = "test.provider1"
-    }
-    }"
+   provider "test" {
+   access_key = "key"
+   alias = "provider1"
+   }
+   module "test" {
+   source = "./assets/__cdktf_module_asset_26CE565C/hash/hcl-module"
+   providers = {
+   test = "test.provider1"
+   }
+   }"
   `);
 });
 
@@ -1053,33 +1053,33 @@ test("multiple providers", () => {
     providers: [provider1, provider2],
   });
   expect(Testing.synthHcl(stack)).toMatchInlineSnapshot(`
-    "terraform {
-    required_providers {
-      test = {
-    version = "~> 2.0"
-    }
-      differentType = {
-    version = "~> 2.0"
-    }
-    }
+   "terraform {
+   required_providers {
+     test = {
+   version = "~> 2.0"
+   }
+     differentType = {
+   version = "~> 2.0"
+   }
+   }
 
 
-    }
+   }
 
-    provider "test" {
-    access_key = "key"
-    }
+   provider "test" {
+   access_key = "key"
+   }
 
-    provider "differentType" {
-    access_key = "key"
-    }
-    module "test" {
-    source = "./assets/__cdktf_module_asset_26CE565C/hash/test/fixtures/hcl-module"
-    providers = {
-    test = "test"
-    differentType = "differentType"
-    }
-    }"
+   provider "differentType" {
+   access_key = "key"
+   }
+   module "test" {
+   source = "./assets/__cdktf_module_asset_26CE565C/hash/hcl-module"
+   providers = {
+   test = "test"
+   differentType = "differentType"
+   }
+   }"
   `);
 });
 
