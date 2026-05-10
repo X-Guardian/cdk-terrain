@@ -142,8 +142,16 @@ export const exec = async (
     child.once("error", (err: any) => ko(err));
     child.once("close", (code: number) => {
       if (code !== 0) {
-        const error = new Error(`non-zero exit code ${code}`);
-        (error as any).stderr = err.map((chunk) => chunk.toString()).join("");
+        const stderrText = err.map((chunk) => chunk.toString()).join("");
+        const stdoutText = out.map((chunk) => chunk.toString()).join("");
+        // Tools like jsii write diagnostic detail to stdout, not stderr — include both.
+        const detail = [stderrText, stdoutText].filter(Boolean).join("\n");
+        const message = detail
+          ? `${command} ${args.join(" ")} exited with code ${code}\n${detail}`
+          : `${command} ${args.join(" ")} exited with code ${code}`;
+        const error = new Error(message);
+        (error as any).stderr = stderrText;
+        (error as any).stdout = stdoutText;
         return ko(error);
       }
       return ok(out.join(""));

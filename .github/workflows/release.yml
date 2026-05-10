@@ -203,7 +203,7 @@ jobs:
       - name: ensure correct user
         run: chown -R root /__w/cdk-terrain
       - name: Release
-        run: npx -p publib publib-npm
+        run: pnpm exec publib-npm
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -263,7 +263,7 @@ jobs:
       - name: ensure correct user
         run: chown -R root /__w/cdk-terrain
       - name: Release
-        run: npx -p publib publib-maven
+        run: pnpm exec publib-maven
         env:
           MAVEN_SERVER_ID: central-ossrh
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
@@ -292,7 +292,7 @@ jobs:
       - name: ensure correct user
         run: chown -R root /__w/cdk-terrain
       - name: Release
-        run: npx -p publib publib-nuget
+        run: pnpm exec publib-nuget
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
@@ -316,7 +316,7 @@ jobs:
       - name: ensure correct user
         run: chown -R root /__w/cdk-terrain
       - name: Release
-        run: npx -p publib publib-golang
+        run: pnpm exec publib-golang
         env:
           GITHUB_TOKEN: ${{ secrets.TERRAFORM_CDK_GO_REPO_GITHUB_TOKEN }}
           GIT_USER_NAME: "CDK Terrain Bot"

@@ -12,7 +12,10 @@
         "infer-owner",
         "semver",
         // Referenced only via `--format=gha` CLI flag in CI; knip can't detect this.
-        "eslint-formatter-gha"
+        "eslint-formatter-gha",
+        // Invoked via `pnpm exec verdaccio` from test/local-registry.sh — knip
+        // doesn't parse shell scripts so it can't see this binary usage.
+        "verdaccio"
       ]
     },
     "packages/cdktn": {

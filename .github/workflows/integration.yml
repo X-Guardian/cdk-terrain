@@ -148,7 +148,7 @@ jobs:
       - name: install test dependencies
         run: cd test && pnpm install --ignore-workspace --frozen-lockfile --prefer-offline
       - name: integration tests
-        run: cd test && ./run-against-dist npx jest ${TEST_TARGET}
+        run: cd test && ./run-against-dist pnpm exec jest ${TEST_TARGET}
         env:
           TEST_TARGET: ${{ matrix.target }}
           TERRAFORM_CLOUD_TOKEN: ${{ secrets.TERRAFORM_CLOUD_TOKEN }}
@@ -230,7 +230,7 @@ jobs:
       - name: install test dependencies
         run: cd test && pnpm install --ignore-workspace --frozen-lockfile --prefer-offline
       - name: integration tests
-        run: cd test && ./run-against-dist.bat "npx jest --ci ${env:TEST_TARGET}"
+        run: cd test && ./run-against-dist.bat "pnpm exec jest --ci ${env:TEST_TARGET}"
         env:
           TEST_TARGET: ${{ matrix.target }}
           TERRAFORM_CLOUD_TOKEN: ${{ secrets.TERRAFORM_CLOUD_TOKEN }}

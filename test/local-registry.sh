@@ -4,18 +4,18 @@
 
 custom_registry_url=localhost:4873
 original_npm_registry_url=`npm get registry`
-default_verdaccio_package=verdaccio@^6.5.2
 
 function startLocalRegistry {
   # Start local registry
   tmp_registry_log=`mktemp`
   echo "Verdaccio Registry log file: $tmp_registry_log"
-  
+
   storage_dir="$(dirname $1)/storage"
   echo "Cleaning storage dir ($storage_dir).."
   rm -rf $storage_dir
 
-  nohup npx ${VERDACCIO_PACKAGE:-$default_verdaccio_package} -c $1 &>$tmp_registry_log &
+  # verdaccio is pinned via root package.json + pnpm-lock.yaml
+  nohup pnpm exec verdaccio -c $1 &>$tmp_registry_log &
   verdaccio_pid="$!"
   
   # Wait for Verdaccio to boot
