@@ -49,12 +49,6 @@
         "^build"
       ]
     },
-    "test:ci": {
-      "dependsOn": [
-        "build",
-        "^build"
-      ]
-    },
     "test:update": {
       "dependsOn": [
         "build",

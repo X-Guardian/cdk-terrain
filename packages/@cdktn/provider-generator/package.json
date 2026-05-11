@@ -16,7 +16,6 @@
     "watch": "tsc -w",
     "watch-preserve-output": "tsc -w --preserveWatchOutput",
     "test:update": "jest -u",
-    "jest-watch": "jest --watch",
     "package": "./package.sh",
     "dist-clean": "rm -rf dist",
     "package:js": "./package.sh"

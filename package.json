@@ -14,7 +14,6 @@
         "package:go": "lerna run package:go && tools/collect-dist.sh",
         "package-windows": "set GOWORK=off && lerna run package && tools\\collect-dist.bat",
         "test": "nx run-many -t test -p 'cdktn*' '@cdktn/*' --parallel=2",
-        "test:ci": "nx run-many -t test:ci -p 'cdktn*' '@cdktn/*'",
         "test:update": "nx run-many -t test:update -p 'cdktn*' '@cdktn/*' --parallel=2 --nxBail=false",
         "watch": "lerna run --parallel  --stream --scope @cdktn/* --scope 'cdktn*' watch-preserve-output",
         "lint:workspace": "nx run-many -t lint",

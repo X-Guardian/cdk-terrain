@@ -13,7 +13,6 @@
     "watch": "yarn compile-build-config && node build.js --watch",
     "watch-preserve-output": "yarn watch",
     "test:update": "jest -u",
-    "jest-watch": "jest --watch",
     "package": "./package.sh",
     "package:js": "./package.sh",
     "dist-clean": "rm -rf dist"
