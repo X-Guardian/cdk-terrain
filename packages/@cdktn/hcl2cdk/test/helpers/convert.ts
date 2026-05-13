@@ -71,6 +71,11 @@ type SchemaFilter = {
 
 const cdktnBin = path.join(__dirname, "../../../../cdktn-cli/bundle/bin/cdktn");
 const cdktnDist = path.join(__dirname, "../../../../../dist");
+const tsxPkgJsonPath = require.resolve("tsx/package.json");
+const tsxBin = path.join(
+  path.dirname(tsxPkgJsonPath),
+  fs.readJsonSync(tsxPkgJsonPath).bin,
+);
 
 export const binding = {
   aws: {
@@ -219,7 +224,7 @@ app.synth()
 };
 
 const getAppCommand: Record<string, (stackName: string) => string> = {
-  typescript: (stackName) => `npx --no-install tsx ${stackName}.ts`,
+  typescript: (stackName) => `${tsxBin} ${stackName}.ts`,
   python: (stackName) => `pipenv run python ${stackName}.py`,
   csharp: (stackName) => `dotnet run --project ${stackName}.csproj`,
 };
