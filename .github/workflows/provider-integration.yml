@@ -79,12 +79,6 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: Upload test node_modules
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: test-node-modules
-          path: test/node_modules
-          include-hidden-files: true
       - name: Build provider test matrix
         id: build-provider-test-matrix
         run: node tools/build-provider-test-matrix.mjs
@@ -135,11 +129,8 @@ jobs:
           key: terraform-${{ runner.os }}-${{ inputs.terraform_version }}-provider-integration
           restore-keys: |
             terraform-${{ runner.os }}-${{ inputs.terraform_version }}-
-      - name: Download test node_modules
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: test-node-modules
-          path: test/node_modules
+      - name: install test dependencies
+        run: cd test && yarn install --frozen-lockfile --prefer-offline
       - name: integration tests
         run: cd test && npm run test:provider -- ${TEST_TARGET}
         env:
@@ -198,11 +189,8 @@ jobs:
       # tmp fix for https://github.com/npm/cli/issues/4980
       - name: update npm
         run: npm install -g npm@8.12.1
-      - name: Download test node_modules
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: test-node-modules
-          path: test/node_modules
+      - name: install test dependencies
+        run: cd test && yarn install --frozen-lockfile --prefer-offline
       - name: integration tests
         run: cd test && ./provider-tests/test-provider.bat ${env:TEST_TARGET}
         env:
