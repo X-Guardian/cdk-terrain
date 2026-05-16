@@ -22,10 +22,7 @@ const repoRoot = process.cwd();
 /** Ordered list of provider keys (e.g. `aws`, `azurerm`) that participate in the provider integration matrix. */
 const providers = Object.keys(
   JSON.parse(
-    readFileSync(
-      join(repoRoot, "test/provider-tests/providers.json"),
-      "utf8",
-    ),
+    readFileSync(join(repoRoot, "test/provider-tests/providers.json"), "utf8"),
   ),
 ).sort();
 
