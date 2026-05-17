@@ -3,21 +3,21 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
+import { zipSync } from "fflate";
 import { assetCanNotCreateZipArchive } from "../errors";
-import { execSync } from "child_process";
 
 const HASH_LEN = 32;
 
 // Full implementation at https://github.com/jprichardson/node-fs-extra/blob/master/lib/copy/copy-sync.js
 /**
  * Copy a file or directory. The directory can have contents and subfolders.
- * @param {string} src
- * @param {string} dest
+ * @param src - source path
+ * @param dest - destination path
  */
 export function copySync(src: string, dest: string) {
   /**
-   * Copies file if present otherwise walks subfolder
-   * @param {string} p
+   * Copies file if present otherwise walks subfolder.
+   * @param p - path relative to src/dest
    */
   function copyItem(p: string) {
     const sourcePath = path.resolve(src, p);
@@ -30,8 +30,8 @@ export function copySync(src: string, dest: string) {
     }
   }
   /**
-   * Copies contents of subfolder
-   * @param {string} p
+   * Copies contents of subfolder.
+   * @param p - path relative to src/dest
    */
   function walkSubfolder(p: string) {
     const sourceDir = path.resolve(src, p);
@@ -45,83 +45,45 @@ export function copySync(src: string, dest: string) {
 }
 
 /**
- * Zips contents at src and places zip archive at dest
- * @param {string} src
- * @param {string} dest
+ * Zips contents at src and places zip archive at dest.
+ * @param src - directory to archive
+ * @param dest - path to write the resulting zip to
  */
 export function archiveSync(src: string, dest: string) {
-  // Run this module as a CLI to get around the synchronous limitation
   try {
-    execSync(`node ${__filename} ${src} ${dest}`, { encoding: "utf-8" });
+    const files: Record<string, Uint8Array> = {};
+    const walk = (dir: string, prefix: string) => {
+      for (const entry of fs.readdirSync(dir)) {
+        const full = path.join(dir, entry);
+        const zipPath = prefix ? `${prefix}/${entry}` : entry;
+        if (fs.statSync(full).isDirectory()) {
+          walk(full, zipPath);
+        } else {
+          files[zipPath] = fs.readFileSync(full);
+        }
+      }
+    };
+    walk(src, "");
+    fs.writeFileSync(dest, zipSync(files, { level: 9 }));
   } catch (err: any) {
     throw assetCanNotCreateZipArchive(src, dest, err);
   }
 }
 
 /**
- * Recursively adds all files under dir to the zip, preserving
- * relative paths
- * @param zip - the instance to add entries to
- * @param dir - absolute path of the directory to walk
- * @param prefix - the path prefix for entries within the zip (empty string for root)
+ * Compute a stable MD5 hash of a file or directory's contents.
+ * Directories are hashed by recursively folding each file's contents into
+ * the same digest, in directory-listing order.
+ * @param src - path to a file or directory to hash
+ * @returns uppercased hex digest, truncated to HASH_LEN characters
  */
-function addDirectory(zip: any, dir: string, prefix: string) {
-  for (const entry of fs.readdirSync(dir)) {
-    const fullPath = path.join(dir, entry);
-    const zipPath = prefix ? `${prefix}/${entry}` : entry;
-    if (fs.statSync(fullPath).isDirectory()) {
-      addDirectory(zip, fullPath, zipPath);
-    } else {
-      zip.addFile(fullPath, zipPath, { compress: true, compressionLevel: 9 });
-    }
-  }
-}
-
-/**
- *
- * @param src
- * @param dest
- */
-async function runArchive(src: string, dest: string) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { ZipFile } = require("yazl");
-  const zip = new ZipFile();
-
-  addDirectory(zip, src, "");
-  zip.end();
-
-  return new Promise<void>((resolve, reject) => {
-    const output = fs.createWriteStream(dest);
-    zip.outputStream.pipe(output);
-    output.on("close", resolve);
-    output.on("error", reject);
-    zip.outputStream.on("error", reject);
-  });
-}
-
-// If this file is executed as a CLI we run archive directly
-// It's a bit of a hack due to us being restricted to synchronous functions
-// when there is no sync way to create a zip archive.
-// We get around this by using execSync and invoking this file as the CLI.
-// This only works for one function, but we only have this use-case once.
-if (require.main === module) {
-  const src = process.argv[2];
-  const dest = process.argv[3];
-  runArchive(src, dest)
-    .then(() => {
-      process.exit(0);
-    })
-    .catch((err) => {
-      console.error(err);
-      process.exit(1);
-    });
-}
-
-// eslint-disable-next-line jsdoc/require-jsdoc
-export function hashPath(src: string) {
+export function hashPath(src: string): string {
   const hash = crypto.createHash("md5");
 
-  // eslint-disable-next-line jsdoc/require-jsdoc
+  /**
+   * Walk `p`, feeding any file contents into the enclosing hash accumulator.
+   * @param p - path to walk
+   */
   function hashRecursion(p: string) {
     const stat = fs.statSync(p);
     if (stat.isFile()) {
@@ -137,10 +99,17 @@ export function hashPath(src: string) {
   return hash.digest("hex").slice(0, HASH_LEN).toUpperCase();
 }
 
-// eslint-disable-next-line jsdoc/require-jsdoc
+/**
+ * Walk upward from `rootPath` looking for a file with the given name.
+ * Returns the absolute path of the first match, or `null` if the search
+ * reaches the filesystem root without finding it.
+ * @param file - filename to search for
+ * @param rootPath - directory to start the search from (defaults to cwd)
+ * @returns absolute path to the file, or null if not found
+ */
 export function findFileAboveCwd(
   file: string,
-  rootPath = process.cwd(),
+  rootPath: string = process.cwd(),
 ): string | null {
   const fullPath = path.resolve(rootPath, file);
   if (fs.existsSync(fullPath)) {
