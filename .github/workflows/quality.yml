@@ -80,4 +80,4 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run knip
-        run: pnpm run knip --reporter github-actions --reporter symbols
+        run: pnpm exec knip --reporter github-actions --reporter symbols
