@@ -76,7 +76,7 @@ jobs:
         if: inputs.package == '@cdktn/hcl2cdk'
         run: |
           pnpm exec nx run cdktn-cli:build
-          pnpm package
+          pnpm run package
         env:
           TERRAFORM_BINARY_NAME: "terraform${{ inputs.terraform_version }}"
           GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}

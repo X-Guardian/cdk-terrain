@@ -62,8 +62,8 @@ jobs:
       - name: build and package
         if: ${{ !inputs.skip_setup }}
         run: |
-          pnpm build
-          pnpm package
+          pnpm run build
+          pnpm run package
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}

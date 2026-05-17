@@ -12,7 +12,7 @@ git tag -l | grep -vE '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$' | xargs git 
 flags="${@:-}"
 
 # skip tag since that is created with the release
-pnpm release --skip.tag=true --bumpFiles ${flags}
+pnpm run release --skip.tag=true --bumpFiles ${flags}
 
 # resotre tags
 git fetch origin --tags

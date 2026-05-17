@@ -13,7 +13,7 @@
         "package:js": "lerna run package:js && tools/collect-dist.sh",
         "package:go": "lerna run package:go && tools/collect-dist.sh",
         "package-windows": "set GOWORK=off && lerna run package && tools\\collect-dist.bat",
-        "pretest": "pnpm lint:workspace && pnpm lint:prettier",
+        "pretest": "pnpm run lint:workspace && pnpm run lint:prettier",
         "test": "lerna run --scope 'cdktn*' --scope @cdktn/* --concurrency 2 test",
         "test:ci": "lerna run --scope 'cdktn*' --scope @cdktn/* test:ci",
         "test:update": "lerna run --concurrency 2 --no-bail --scope 'cdktn*' --scope '@cdktn/*' test:update",
@@ -24,8 +24,8 @@
         "lint:prettier": "prettier --check .",
         "lint:examples": "node tools/lint-examples.mjs",
         "link-packages": "lerna exec --scope 'cdktn*' --scope @cdktn/* -- pnpm link --global",
-        "integration": "cd test && pnpm edge:install && ./run-against-dist pnpm exec jest --runInBand",
-        "integration:update": "cd test && pnpm install --ignore-workspace && pnpm edge:install && NODE_OPTIONS='--max-old-space-size=7168' ./run-against-dist pnpm exec jest -u --runInBand",
+        "integration": "cd test && pnpm run edge:install && ./run-against-dist pnpm exec jest --runInBand",
+        "integration:update": "cd test && pnpm install --ignore-workspace && pnpm run edge:install && NODE_OPTIONS='--max-old-space-size=7168' ./run-against-dist pnpm exec jest -u --runInBand",
         "integration:single": "cd test && ./run-against-dist pnpm exec jest --runInBand",
         "integration:typescript": "cd test && ./run-against-dist pnpm exec jest --runInBand typescript",
         "integration:python": "cd test && ./run-against-dist pnpm exec jest --runInBand python",
@@ -46,9 +46,9 @@
         "prepare-next-release": "standard-version --prerelease pre --release-as minor --skip.changelog=true --skip.commit=true",
         "prepare-release": "tools/prepare-release.sh",
         "release": "standard-version",
-        "generate-docs:api": "pnpm install && pnpm build && mkdir -p website/docs/cdktn/api-reference && cd tools/documentation-generation && pnpm install --ignore-workspace && pnpm docs && pnpm exec prettier --write ../../website/docs/cdktn/api-reference/**",
-        "generate-docs": "pnpm generate-docs:api",
-        "generate-function-bindings": "cd tools/generate-function-bindings && pnpm install && pnpm fetch-metadata && pnpm generate"
+        "generate-docs:api": "pnpm install && pnpm run build && mkdir -p website/docs/cdktn/api-reference && cd tools/documentation-generation && pnpm install --ignore-workspace && pnpm run docs && pnpm exec prettier --write ../../website/docs/cdktn/api-reference/**",
+        "generate-docs": "pnpm run generate-docs:api",
+        "generate-function-bindings": "cd tools/generate-function-bindings && pnpm install && pnpm run fetch-metadata && pnpm run generate"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.4",
@@ -82,7 +82,7 @@
     },
     "lint-staged": {
         "!(.claude|.agents|.specledger|specledger)/**/*.{ts,tsx,js,css,md}": "prettier --write",
-        "examples/**": "pnpm lint:examples"
+        "examples/**": "pnpm run lint:examples"
     },
     "packageManager": "pnpm@10.33.4"
 }

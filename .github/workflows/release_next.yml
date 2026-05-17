@@ -48,7 +48,7 @@ jobs:
           git config user.name github-team-tf-cdk
           git config user.email github-team-tf-cdk@hashicorp.com
       - run: |
-          pnpm prepare-next-release
+          pnpm run prepare-next-release
           tools/align-version.sh
       - name: version
         id: get_version
@@ -71,8 +71,8 @@ jobs:
       - name: create bundle
         run: |
           pnpm install --frozen-lockfile
-          pnpm build
-          pnpm package
+          pnpm run build
+          pnpm run package
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       - name: Add sourcemap and commit info to sentry

@@ -63,8 +63,8 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           tools/align-version.sh
-          pnpm build
-          pnpm package
+          pnpm run build
+          pnpm run package
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       - name: Add sourcemap and commit info to sentry
@@ -179,7 +179,7 @@ jobs:
         with:
           name: dist
       - name: Release to github
-        run: pnpm release-github
+        run: pnpm run release-github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
