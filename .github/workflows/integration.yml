@@ -80,8 +80,7 @@ jobs:
           name: edge-provider-bindings
           path: packages/@cdktn/provider-generator/edge-provider-bindings
       - name: installing test dependencies
-        run: |
-          cd test && pnpm install --ignore-workspace --frozen-lockfile --prefer-offline
+        run: cd test && pnpm install --ignore-workspace --frozen-lockfile --prefer-offline
       - name: Build test matrix
         id: build-test-matrix
         run: node tools/build-test-matrix.mjs

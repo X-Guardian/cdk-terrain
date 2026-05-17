@@ -63,8 +63,7 @@ jobs:
           key: providerSchema-${{ runner.os }}-${{ inputs.terraform_version }}-unit-${{ inputs.package }}
 
       - name: installing dependencies
-        run: |
-          pnpm install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
       - name: compile
         run: |
           tools/align-version.sh
