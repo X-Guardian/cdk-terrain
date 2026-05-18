@@ -65,9 +65,6 @@ jobs:
       - name: installing dependencies
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: align versions
-        run: tools/align-version.sh
-
       - name: package (only when @cdktn/hcl2cdk is affected)
         # @cdktn/hcl2cdk's globalSetup.ts spawns `cdktn init --dist=...` which
         # reads jsii tarballs from the workspace-root dist/ directory; that
@@ -160,9 +157,6 @@ jobs:
 
       - name: installing dependencies
         run: yarn install --frozen-lockfile --prefer-offline
-
-      - name: align versions
-        run: tools/align-version.sh
 
       - name: nx affected - test (terraform-dependent projects)
         run: |
