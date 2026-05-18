@@ -13,6 +13,9 @@
   },
   "main": "build/lib/index.js",
   "types": "build/lib/index.d.ts",
+  "nx": {
+    "tags": ["unit-test"]
+  },
   "publishConfig": {
     "access": "public"
   },

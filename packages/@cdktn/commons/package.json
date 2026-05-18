@@ -16,6 +16,9 @@
   },
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "nx": {
+    "tags": ["unit-test"]
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/open-constructs/cdk-terrain.git",

@@ -17,6 +17,9 @@
   "license": "MPL-2.0",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "nx": {
+    "tags": ["unit-test"]
+  },
   "scripts": {
     "build": "tsc && ./build-go.sh",
     "watch": "tsc -w",

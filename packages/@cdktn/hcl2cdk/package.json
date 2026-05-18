@@ -64,6 +64,7 @@
     "typescript": "5.4.5"
   },
   "nx": {
+    "tags": ["unit-test"],
     "targets": {
       "test": {
         "dependsOn": ["build", "^build", "cdktn-cli:build"]

@@ -17,7 +17,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "nx": {
-    "tags": ["needs:terraform"]
+    "tags": ["unit-test:terraform"]
   },
   "repository": {
     "type": "git",

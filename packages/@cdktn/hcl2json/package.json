@@ -4,6 +4,9 @@
   "description": "Transform HCL into JSON",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "nx": {
+    "tags": ["unit-test"]
+  },
   "publishConfig": {
     "access": "public"
   },

@@ -2,6 +2,9 @@
   "name": "cdktn-cli",
   "version": "0.0.0",
   "description": "CDK Terrain CLI",
+  "nx": {
+    "tags": ["unit-test"]
+  },
   "bin": {
     "cdktn": "bundle/bin/cdktn"
   },

@@ -79,7 +79,7 @@ jobs:
       - name: nx affected - test (excluding terraform-dependent projects)
         run: |
           yarn nx affected -t test \
-            --exclude='tag:needs:terraform','@examples/*','generate-function-bindings' \
+            --exclude='*,!tag:unit-test' \
             --parallel=2 \
             --base="$NX_BASE" --head="$NX_HEAD" \
             --coverage \
@@ -156,7 +156,7 @@ jobs:
         run: |
           unset TF_PLUGIN_CACHE_DIR
           yarn nx affected -t test \
-            --exclude='*,!tag:needs:terraform','@examples/*' \
+            --exclude='*,!tag:unit-test:terraform' \
             --parallel=2 \
             --base="$NX_BASE" --head="$NX_HEAD" \
             --coverage \

@@ -18,7 +18,9 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "nx": {
-        "tags": ["needs:terraform"]
+        "tags": [
+            "unit-test:terraform"
+        ]
     },
     "keywords": [
         "cdk",
