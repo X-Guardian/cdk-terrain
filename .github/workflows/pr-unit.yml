@@ -56,6 +56,12 @@ jobs:
             go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-
             go-${{ runner.os }}-
 
+      - name: Create TF_PLUGIN_CACHE_DIR if set
+        run: |
+          if [ -n "${TF_PLUGIN_CACHE_DIR:-}" ]; then
+            mkdir -p "$TF_PLUGIN_CACHE_DIR"
+          fi
+
       - name: installing dependencies
         run: yarn install --frozen-lockfile --prefer-offline
 
@@ -145,6 +151,12 @@ jobs:
         with:
           path: ${{ steps.global-cache-dir-path.outputs.providerSchema }}
           key: providerSchema-${{ runner.os }}-${{ matrix.terraform_version }}-unit-affected
+
+      - name: Create TF_PLUGIN_CACHE_DIR if set
+        run: |
+          if [ -n "${TF_PLUGIN_CACHE_DIR:-}" ]; then
+            mkdir -p "$TF_PLUGIN_CACHE_DIR"
+          fi
 
       - name: installing dependencies
         run: yarn install --frozen-lockfile --prefer-offline
