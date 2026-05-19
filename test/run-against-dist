@@ -3,12 +3,9 @@ set -euo pipefail
 
 scriptdir=$(cd $(dirname $0) && pwd)
 
-# Load functions for working with local NPM registry (Verdaccio)
-source "$scriptdir"/local-registry.sh
-
 function cleanup {
   # Restore the original npm registry URL and stop Verdaccio
-  stopLocalRegistry
+  node "$scriptdir"/local-registry.mjs stop || true
 }
 
 function handle_error {
@@ -23,14 +20,14 @@ function handle_exit {
 
 # Cleanup before exit on any termination signal
 trap 'set +x; handle_error' ERR
-trap 'set +x; handle_exit' SIGQUIT SIGTERM SIGINT SIGKILL SIGHUP
+trap 'set +x; handle_exit' SIGQUIT SIGTERM SIGINT SIGHUP
 
 export CDKTF_DIST="${scriptdir}/../dist"
 cwd=$PWD
 cdktf_root="${scriptdir}/.."
 
-# Start the local NPM registry
-startLocalRegistry "$scriptdir"/verdaccio.yaml
+# Start the local NPM registry (Verdaccio)
+node "$scriptdir"/local-registry.mjs start "$scriptdir"/verdaccio.yaml
 
 cd ${CDKTF_DIST}
 
@@ -70,7 +67,7 @@ done
 # stop the local registry now that we installed the CLI
 # Some tests install cdktn in an older version from NPM
 # Which we'd block via the local registry otherwise
-stopLocalRegistry
+node "$scriptdir"/local-registry.mjs stop
 
 export TEST_PATH_CDKTF_CLI=${staging}/node_modules/.bin
 export PATH=$TEST_PATH_CDKTF_CLI:$PATH
