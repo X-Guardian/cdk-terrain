@@ -5,6 +5,9 @@
 
 const { nxPreset } = require('@nx/jest/preset');
 
+/** Suppresses HashiCorp Checkpoint update-check HTTP calls during tests. */
+process.env.CHECKPOINT_DISABLE = '1';
+
 module.exports = {
   ...nxPreset,
   testEnvironment: 'node',
