@@ -6,22 +6,18 @@
 // Build the cdktn language packages via jsii-pacmak.
 //
 // Why this script exists:
-//   cdktn ships its runtime deps (json-stable-stringify, semver, yazl) inside
-//   the published tarball so JSII pacmak can embed them in the
-//   Python/Java/Go/.NET targets — the embedded JS needs them at runtime in
-//   user environments where there is no `npm install`.
+//   cdktn ships its runtime deps (json-stable-stringify, semver, yazl) inside the published tarball so JSII pacmak can
+//   embed them in the Python/Java/Go/.NET targets — the embedded JS needs them at runtime in user environments where
+//   there is no `npm install`.
 //
-//   Under pnpm's default isolated layout, those deps inside packages/cdktn/
-//   node_modules are symlinks back into ../../node_modules/.pnpm/<dep>/. When
-//   `npm pack` (called by jsii-pacmak) walks the symlinks, it produces
-//   tarball entries with `..`-escape paths that most tar extractors discard,
-//   leaving the bundled deps' transitives missing in the published tarballs.
+//   Under pnpm's default isolated layout, those deps inside packages/cdktn/node_modules are symlinks back into
+//   ../../node_modules/.pnpm/<dep>/. When `npm pack` (called by jsii-pacmak) walks the symlinks, it produces tarball
+//   entries with `..`-escape paths that most tar extractors discard, leaving the bundled deps' transitives missing in
+//   the published tarballs.
 //
-//   This script sidesteps the issue by copying cdktn's source into a staging
-//   directory and running `npm install --omit=dev` there. npm produces a
-//   regular nested node_modules layout (no symlinks), which jsii-pacmak +
-//   `npm pack` can bundle correctly. Outputs are copied back to packages/cdktn
-//   /dist/.
+//   This script sidesteps the issue by copying cdktn's source into a staging directory and running `npm install
+//   --omit=dev` there. npm produces a regular nested node_modules layout (no symlinks), which jsii-pacmak + `npm pack`
+//   can bundle correctly. Outputs are copied back to packages/cdktn/dist/.
 
 import { execFileSync } from "node:child_process";
 import { rmSync, mkdirSync, cpSync, existsSync } from "node:fs";
@@ -82,8 +78,7 @@ function prepareStagingDir() {
 }
 
 /**
- * Copy the resolved source files into the staging directory, preserving
- * relative paths.
+ * Copy the resolved source files into the staging directory, preserving relative paths.
  *
  * @param {string[]} sourceFiles relative paths from packageDir
  */
@@ -98,16 +93,15 @@ function copySourceFiles(sourceFiles) {
 }
 
 /**
- * Install runtime dependencies into the staging directory using npm. Produces
- * a flat/nested node_modules layout (no pnpm symlinks) suitable for npm pack.
+ * Install runtime dependencies into the staging directory using npm. Produces a flat/nested node_modules layout (no
+ * pnpm symlinks) suitable for npm pack.
  *
  * Flags:
  *   --omit=dev:           skip devDependencies (jest, jsii, typescript, ...).
  *   --omit=optional:      skip optional deps.
  *   --no-package-lock:    don't pollute staging with a fresh lockfile.
  *   --prefer-offline:     use the local npm cache before the network.
- *   --ignore-scripts:     don't run install scripts of bundled deps; bundling
- *                         needs the tree on disk only.
+ *   --ignore-scripts:     don't run install scripts of bundled deps; bundling needs the tree on disk only.
  */
 function installRuntimeDeps() {
   console.log("Installing runtime deps into staging via npm...");
@@ -126,9 +120,8 @@ function installRuntimeDeps() {
 }
 
 /**
- * Run jsii-pacmak against the staging directory via its programmatic API.
- * Avoids spawning a Node subprocess and lets static analysers see the
- * jsii-pacmak dependency.
+ * Run jsii-pacmak against the staging directory via its programmatic API. Avoids spawning a Node subprocess and lets
+ * static analysers see the jsii-pacmak dependency.
  *
  * @param {string[]} targets jsii-pacmak target names; empty = all.
  */
@@ -141,8 +134,8 @@ async function runJsiiPacmak(targets) {
 }
 
 /**
- * Run go-copyright-header.sh against the staging output. Operates on dist/go/
- * so needs to run from where dist/ landed (the staging dir).
+ * Run go-copyright-header.sh against the staging output. Operates on dist/go/ so needs to run from where dist/ landed
+ * (the staging dir).
  */
 function runGoCopyrightHeader() {
   const script = join(stagingDir, "go-copyright-header.sh");
@@ -152,8 +145,7 @@ function runGoCopyrightHeader() {
 }
 
 /**
- * Move the produced dist/ from staging back to the package's dist/.
- * Replaces any prior content.
+ * Move the produced dist/ from staging back to the package's dist/. Replaces any prior content.
  */
 function moveDistOut() {
   const stagingDist = join(stagingDir, "dist");
