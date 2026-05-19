@@ -138,6 +138,8 @@ jobs:
           path: dist
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
+      - name: Install test dependencies
+        run: cd test && pnpm install --ignore-workspace --frozen-lockfile --prefer-offline
       - name: Recreate packages/cdktn/dist/go layout for Go examples
         # Go examples' go.mod files use `replace ... => ../../../packages/cdktn/dist/go/cdktn`,
         # which points at the per-package build output. The matrix job only has the aggregated
