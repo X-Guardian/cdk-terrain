@@ -1,10 +1,10 @@
 // Copyright (c) HashiCorp, Inc
 // SPDX-License-Identifier: MPL-2.0
-import { App, TerraformStack, Testing } from "../lib";
+import { App, TerraformStack, Testing } from "../src";
 
 import { Construct, IValidation } from "constructs";
 import { TestResource } from "./helper/resource";
-import { ValidateBinaryVersion } from "../lib/validations";
+import { ValidateBinaryVersion } from "../src/validations";
 import { TestProvider } from "./helper/provider";
 import { createTmpHelper } from "./helper/tmp";
 
