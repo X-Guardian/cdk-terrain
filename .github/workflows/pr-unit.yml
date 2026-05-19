@@ -158,6 +158,15 @@ jobs:
       - name: installing dependencies
         run: yarn install --frozen-lockfile --prefer-offline
 
+      - name: package (only when @cdktn/cli-core is affected)
+        run: |
+          if yarn --silent nx show projects --affected --base="$NX_BASE" --head="$NX_HEAD" | grep -qx '@cdktn/cli-core'; then
+            echo "@cdktn/cli-core affected; running yarn package"
+            yarn package
+          else
+            echo "@cdktn/cli-core not affected; skipping yarn package"
+          fi
+
       - name: nx affected - test (terraform-dependent projects)
         run: |
           unset TF_PLUGIN_CACHE_DIR
