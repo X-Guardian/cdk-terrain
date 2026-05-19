@@ -181,7 +181,6 @@ jobs:
       # Setup caches for terraform, and go
       - name: Get cache directory paths
         id: global-cache-dir-path
-        shell: bash
         run: |
           mkdir -p /usr/local/share/.cache/terraform
           echo "terraform=/usr/local/share/.cache/terraform" >> $GITHUB_OUTPUT

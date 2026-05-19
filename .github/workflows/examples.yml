@@ -105,7 +105,8 @@ jobs:
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: ".nvmrc"
-      - uses: ./.github/actions/setup-corepack-pnpm
+      - name: Setup corepack-managed pnpm
+        uses: ./.github/actions/setup-corepack-pnpm
       - name: Get cache directory paths
         id: global-cache-dir-path
         run: |
@@ -135,6 +136,8 @@ jobs:
         with:
           name: dist-examples
           path: dist
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
       - name: Recreate packages/cdktn/dist/go layout for Go examples
         # Go examples' go.mod files use `replace ... => ../../../packages/cdktn/dist/go/cdktn`,
         # which points at the per-package build output. The matrix job only has the aggregated
