@@ -54,7 +54,7 @@ jobs:
         run: |
           mkdir -p /usr/local/share/.cache/go
           echo "go=/usr/local/share/.cache/go" >> $GITHUB_OUTPUT
-      - name: Restore yarn cache
+      - name: Cache go
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: ${{ steps.global-cache-dir-path.outputs.go }}

@@ -310,9 +310,6 @@ importers:
       '@cdktf/provider-aws':
         specifier: 21.22.1
         version: 21.22.1(cdktf@0.21.0(constructs@10.6.0))(constructs@10.6.0)
-      cdktf:
-        specifier: 0.21.0
-        version: 0.21.0(constructs@10.6.0)
       cdktn:
         specifier: workspace:*
         version: link:../../../packages/cdktn
@@ -400,9 +397,6 @@ importers:
       '@cdktf/provider-azurerm':
         specifier: 14.23.1
         version: 14.23.1(cdktf@0.21.0(constructs@10.6.0))(constructs@10.6.0)
-      cdktf:
-        specifier: ^0.21.0
-        version: 0.21.0(constructs@10.6.0)
       cdktn:
         specifier: workspace:*
         version: link:../../../packages/cdktn
