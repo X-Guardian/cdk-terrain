@@ -106,7 +106,7 @@ This is a **JSII monorepo** (Lerna + Yarn workspaces) that compiles TypeScript t
 
 ## Feature Flags
 
-Feature flags in `packages/cdktn/lib/features.ts` enable breaking behavior changes behind opt-in flags. New projects get flags enabled via `cdktf.json`. Add new flags to `FUTURE_FLAGS` map.
+Feature flags in `packages/cdktn/src/features.ts` enable breaking behavior changes behind opt-in flags. New projects get flags enabled via `cdktf.json`. Add new flags to `FUTURE_FLAGS` map.
 
 ## Constitution
 
