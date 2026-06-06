@@ -40,19 +40,12 @@ jobs:
       - name: Derive base/head SHAs for nx affected
         uses: nrwl/nx-set-shas@afb73a62d26e41464e9254689e1fd6122ee683c1 # v5.0.1
 
-      - name: Get cache directory paths
-        id: global-cache-dir-path
-        run: |
-          mkdir -p /usr/local/share/.cache/go
-          echo "go=/usr/local/share/.cache/go" >> $GITHUB_OUTPUT
-      - name: Restore go cache
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Setup toolchain caches
+        id: cache
+        uses: ./.github/actions/setup-toolchain-cache
         with:
-          path: ${{ steps.global-cache-dir-path.outputs.go }}
-          key: go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-unit
-          restore-keys: |
-            go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-
-            go-${{ runner.os }}-
+          caches: go
+          cache-suffix: unit
 
       - name: Create TF_PLUGIN_CACHE_DIR if set
         run: |
@@ -86,7 +79,7 @@ jobs:
             --coverage \
             --reporters=default --reporters=github-actions
         env:
-          GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}
+          GOCACHE: ${{ steps.cache.outputs.go }}
 
       - name: Coverage summary
         if: always()
@@ -121,26 +114,14 @@ jobs:
       - name: Derive base/head SHAs for nx affected
         uses: nrwl/nx-set-shas@afb73a62d26e41464e9254689e1fd6122ee683c1 # v5.0.1
 
-      - name: Get cache directory paths
-        id: global-cache-dir-path
-        run: |
-          mkdir -p /usr/local/share/.cache/go
-          echo "go=/usr/local/share/.cache/go" >> $GITHUB_OUTPUT
-          mkdir -p /usr/local/share/.cache/providerSchema
-          echo "providerSchema=/usr/local/share/.cache/providerSchema" >> $GITHUB_OUTPUT
-      - name: Restore go cache
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Setup toolchain caches
+        id: cache
+        uses: ./.github/actions/setup-toolchain-cache
         with:
-          path: ${{ steps.global-cache-dir-path.outputs.go }}
-          key: go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-unit
-          restore-keys: |
-            go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-
-            go-${{ runner.os }}-
-      - name: Restore provider schema cache
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        with:
-          path: ${{ steps.global-cache-dir-path.outputs.providerSchema }}
-          key: providerSchema-${{ runner.os }}-${{ matrix.terraform_version }}-unit-affected
+          caches: go provider-schema
+          cache-suffix: unit
+          terraform-version: ${{ matrix.terraform_version }}
+          provider-schema-key: unit-affected
 
       - name: Create TF_PLUGIN_CACHE_DIR if set
         run: |
@@ -171,8 +152,8 @@ jobs:
             --reporters=default --reporters=github-actions
         env:
           TERRAFORM_BINARY_NAME: "terraform${{ matrix.terraform_version }}"
-          GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}
-          CDKTF_EXPERIMENTAL_PROVIDER_SCHEMA_CACHE_PATH: ${{ steps.global-cache-dir-path.outputs.providerSchema }}
+          GOCACHE: ${{ steps.cache.outputs.go }}
+          CDKTF_EXPERIMENTAL_PROVIDER_SCHEMA_CACHE_PATH: ${{ steps.cache.outputs.provider-schema }}
 
       - name: Coverage summary
         if: always()

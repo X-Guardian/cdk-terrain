@@ -40,25 +40,14 @@ jobs:
       - name: Setup corepack-managed pnpm
         uses: ./.github/actions/setup-corepack-pnpm
 
-      # Setup caches for go and provider schema
-      - name: Get cache directory paths
-        id: global-cache-dir-path
-        run: |
-          mkdir -p /usr/local/share/.cache/go
-          echo "go=/usr/local/share/.cache/go" >> $GITHUB_OUTPUT
-          mkdir -p /usr/local/share/.cache/providerSchema
-          echo "providerSchema=/usr/local/share/.cache/providerSchema" >> $GITHUB_OUTPUT
-      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Setup toolchain caches
+        id: cache
+        uses: ./.github/actions/setup-toolchain-cache
         with:
-          path: ${{ steps.global-cache-dir-path.outputs.go }}
-          key: go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-unit
-          restore-keys: |
-            go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-
-            go-${{ runner.os }}-
-      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        with:
-          path: ${{ steps.global-cache-dir-path.outputs.providerSchema }}
-          key: providerSchema-${{ runner.os }}-${{ inputs.terraform_version }}-unit-${{ inputs.package }}
+          caches: go provider-schema
+          cache-suffix: unit
+          terraform-version: ${{ inputs.terraform_version }}
+          provider-schema-key: unit-${{ inputs.package }}
 
       - name: installing dependencies
         run: |
@@ -80,8 +69,8 @@ jobs:
           pnpm exec nx test '${{ inputs.package }}' --ci --coverage --reporters=default --reporters=github-actions
         env:
           TERRAFORM_BINARY_NAME: "terraform${{ inputs.terraform_version }}"
-          GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}
-          CDKTF_EXPERIMENTAL_PROVIDER_SCHEMA_CACHE_PATH: ${{ steps.global-cache-dir-path.outputs.providerSchema }}
+          GOCACHE: ${{ steps.cache.outputs.go }}
+          CDKTF_EXPERIMENTAL_PROVIDER_SCHEMA_CACHE_PATH: ${{ steps.cache.outputs.provider-schema }}
 
       - name: Coverage summary
         if: always()

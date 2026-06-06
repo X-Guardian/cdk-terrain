@@ -1,0 +1,97 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+name: Setup toolchain caches
+description: >-
+  Restores the language-toolchain caches (Go build cache, Terraform plugins,
+  Gradle, provider schema) shared across CI jobs. Select tools via `caches`;
+  the cache dirs are re-exposed as outputs (go/terraform/gradle/provider-schema)
+  so callers can wire e.g. GOCACHE.
+
+inputs:
+  cache-suffix:
+    description: Per-workflow cache key suffix, e.g. build, examples, integration, unit, provider-integration.
+    required: true
+  caches:
+    description: Space-separated tools to cache; any of `go terraform gradle provider-schema`.
+    required: true
+  terraform-version:
+    description: Terraform version for the terraform/provider-schema cache keys (e.g. matrix.terraform).
+    required: false
+    default: ""
+  provider-schema-key:
+    description: Provider-schema key suffix where it diverges (e.g. unit-affected, unit-<package>).
+    required: false
+    default: ""
+
+outputs:
+  go:
+    description: Go cache directory.
+    value: ${{ steps.dirs.outputs.go }}
+  terraform:
+    description: Terraform plugin cache directory.
+    value: ${{ steps.dirs.outputs.terraform }}
+  gradle:
+    description: Gradle cache directory.
+    value: ${{ steps.dirs.outputs.gradle }}
+  provider-schema:
+    description: Provider schema cache directory.
+    value: ${{ steps.dirs.outputs.provider-schema }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get cache directory paths
+      id: dirs
+      shell: bash
+      run: |
+        for tool in $CACHES; do
+          case "$tool" in
+            go)              dir=/usr/local/share/.cache/go; out=go ;;
+            terraform)       dir=/usr/local/share/.cache/terraform; out=terraform ;;
+            gradle)          dir=/usr/local/share/.cache/gradle; out=gradle ;;
+            provider-schema) dir=/usr/local/share/.cache/providerSchema; out=provider-schema ;;
+            *) echo "unknown cache '$tool'" >&2; exit 1 ;;
+          esac
+          mkdir -p "$dir"
+          echo "$out=$dir" >> "$GITHUB_OUTPUT"
+        done
+      env:
+        CACHES: ${{ inputs.caches }}
+
+    - name: Cache go
+      if: contains(inputs.caches, 'go')
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      with:
+        path: ${{ steps.dirs.outputs.go }}
+        key: go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-${{ inputs.cache-suffix }}
+        restore-keys: |
+          go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-
+          go-${{ runner.os }}-
+
+    - name: Cache terraform
+      if: contains(inputs.caches, 'terraform')
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      with:
+        path: ${{ steps.dirs.outputs.terraform }}
+        key: terraform-${{ runner.os }}-${{ inputs.terraform-version }}-${{ inputs.cache-suffix }}
+        restore-keys: |
+          terraform-${{ runner.os }}-${{ inputs.terraform-version }}-
+
+    - name: Cache gradle
+      if: contains(inputs.caches, 'gradle')
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      with:
+        # Skip daemon/, notifications/, native/ — only the distribution + module jars are worth keeping
+        path: |
+          ${{ steps.dirs.outputs.gradle }}/caches/modules-2
+          ${{ steps.dirs.outputs.gradle }}/wrapper/dists
+        key: gradle-${{ runner.os }}-${{ inputs.cache-suffix }}
+        restore-keys: gradle-${{ runner.os }}-
+
+    - name: Cache provider schema
+      if: contains(inputs.caches, 'provider-schema')
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      with:
+        path: ${{ steps.dirs.outputs.provider-schema }}
+        key: providerSchema-${{ runner.os }}-${{ inputs.terraform-version }}-${{ inputs.provider-schema-key }}

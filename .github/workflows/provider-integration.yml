@@ -53,20 +53,12 @@ jobs:
           node-version-file: .nvmrc
       - name: Setup corepack-managed pnpm
         uses: ./.github/actions/setup-corepack-pnpm
-      # Setup cache for go
-      - name: Get cache directory paths
-        id: global-cache-dir-path
-        run: |
-          mkdir -p /usr/local/share/.cache/go
-          echo "go=/usr/local/share/.cache/go" >> $GITHUB_OUTPUT
-      - name: Cache go
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Setup toolchain caches
+        id: cache
+        uses: ./.github/actions/setup-toolchain-cache
         with:
-          path: ${{ steps.global-cache-dir-path.outputs.go }}
-          key: go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-provider-integration
-          restore-keys: |
-            go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}-
-            go-${{ runner.os }}-
+          caches: go
+          cache-suffix: provider-integration
       - name: installing dependencies and build
         if: ${{ !inputs.skip_setup }}
         run: |
@@ -74,7 +66,7 @@ jobs:
           pnpm build
           pnpm package
         env:
-          GOCACHE: ${{ steps.global-cache-dir-path.outputs.go }}
+          GOCACHE: ${{ steps.cache.outputs.go }}
       - name: installing test dependencies
         run: cd test && pnpm install --ignore-workspace --frozen-lockfile --prefer-offline
       - name: Upload dist
@@ -118,18 +110,13 @@ jobs:
           node-version-file: .nvmrc
       - name: Setup corepack-managed pnpm
         uses: ./.github/actions/setup-corepack-pnpm
-      - name: Get cache directory paths
-        id: global-cache-dir-path
-        run: |
-          mkdir -p /usr/local/share/.cache/terraform
-          echo "terraform=/usr/local/share/.cache/terraform" >> $GITHUB_OUTPUT
-      - name: Restore terraform plugin cache
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Setup toolchain caches
+        id: cache
+        uses: ./.github/actions/setup-toolchain-cache
         with:
-          path: ${{ steps.global-cache-dir-path.outputs.terraform }}
-          key: terraform-${{ runner.os }}-${{ inputs.terraform_version }}-provider-integration
-          restore-keys: |
-            terraform-${{ runner.os }}-${{ inputs.terraform_version }}-
+          caches: terraform
+          cache-suffix: provider-integration
+          terraform-version: ${{ inputs.terraform_version }}
       - name: install test dependencies
         run: cd test && pnpm install --ignore-workspace --frozen-lockfile --prefer-offline
       - name: integration tests
@@ -137,7 +124,7 @@ jobs:
         env:
           TEST_TARGET: ${{ matrix.target }}
           NODE_OPTIONS: "--max-old-space-size=7168"
-          TF_PLUGIN_CACHE_DIR: ${{ steps.global-cache-dir-path.outputs.terraform }}
+          TF_PLUGIN_CACHE_DIR: ${{ steps.cache.outputs.terraform }}
           SYNTH_HCL_OUTPUT: ${{ matrix.hclOutput }}
 
   windows_provider:
@@ -171,18 +158,13 @@ jobs:
         with:
           name: ${{ inputs.dist_artifact_name }}
           path: dist
-      - name: Get cache directory paths
-        id: global-cache-dir-path
-        shell: bash
-        run: |
-          mkdir -p /usr/local/share/.cache/terraform
-          echo "terraform=/usr/local/share/.cache/terraform" >> $GITHUB_OUTPUT
-      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Setup toolchain caches
+        id: cache
+        uses: ./.github/actions/setup-toolchain-cache
         with:
-          path: ${{ steps.global-cache-dir-path.outputs.terraform }}
-          key: terraform-${{ runner.os }}-${{ inputs.terraform_version }}-provider-integration
-          restore-keys: |
-            terraform-${{ runner.os }}-${{ inputs.terraform_version }}-
+          caches: terraform
+          cache-suffix: provider-integration
+          terraform-version: ${{ inputs.terraform_version }}
       # tmp fix for https://github.com/npm/cli/issues/4980
       - name: update npm
         run: npm install -g npm@8.12.1
@@ -193,5 +175,5 @@ jobs:
         env:
           TEST_TARGET: ${{ matrix.target }}
           NODE_OPTIONS: "--max-old-space-size=7168"
-          TF_PLUGIN_CACHE_DIR: ${{ steps.global-cache-dir-path.outputs.terraform }}
+          TF_PLUGIN_CACHE_DIR: ${{ steps.cache.outputs.terraform }}
           SYNTH_HCL_OUTPUT: ${{ matrix.hclOutput }}
