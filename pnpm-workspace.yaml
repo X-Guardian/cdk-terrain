@@ -1,0 +1,14 @@
+packages:
+  - "packages/*"
+  - "packages/@cdktn/*"
+  - "examples/**"
+  - "tools/generate-function-bindings"
+
+onlyBuiltDependencies:
+  - "@swc/core"
+  - esbuild
+  - nx
+  - unrs-resolver
+
+overrides:
+  "@types/react": 18.3.28
