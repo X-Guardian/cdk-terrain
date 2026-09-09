@@ -57,8 +57,9 @@ jobs:
             --packageManager pnpm --dep prod,dev,optional,peer --no-deprecated
 
       # Refresh the lockfile after the ncu edits above (necessary for "pnpm update" to run)
+      # strictDepBuilds is relaxed so an unapproved dep build does not kill the PR (see #399)
       - name: Run "pnpm install"
-        run: pnpm install --prefer-offline --no-frozen-lockfile
+        run: pnpm install --prefer-offline --no-frozen-lockfile --config.strictDepBuilds=false
 
       # Next, create and upload the changes as a patch file. This will later be downloaded to create a pull request
       # Creating a pull request requires write permissions and it's best to keep write privileges isolated.
@@ -220,8 +221,9 @@ jobs:
             --packageManager pnpm --dep prod,dev,optional,peer --no-deprecated
 
       # Refresh the lockfile after the ncu edits above (necessary for "pnpm update" to run)
+      # strictDepBuilds is relaxed so an unapproved dep build does not kill the PR (see #399)
       - name: Run "pnpm install"
-        run: pnpm install --prefer-offline --no-frozen-lockfile
+        run: pnpm install --prefer-offline --no-frozen-lockfile --config.strictDepBuilds=false
 
       - name: Mint CDKTN maintainers App token
         id: app-token
@@ -301,8 +303,9 @@ jobs:
             --target=minor \
             --packageManager pnpm --dep prod,dev,optional,peer --no-deprecated
       # Refresh the lockfile after the ncu edits above (necessary for "pnpm update" to run)
+      # strictDepBuilds is relaxed so an unapproved dep build does not kill the PR (see #399)
       - name: Run "pnpm install"
-        run: pnpm install --prefer-offline --no-frozen-lockfile
+        run: pnpm install --prefer-offline --no-frozen-lockfile --config.strictDepBuilds=false
 
       - name: Mint CDKTN maintainers App token
         id: app-token
