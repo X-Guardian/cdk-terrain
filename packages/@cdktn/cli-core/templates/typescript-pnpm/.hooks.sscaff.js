@@ -7,16 +7,21 @@ const { execSync } = require("child_process");
 const { readFileSync, writeFileSync } = require("fs");
 
 // The `typescript` template is scaffolded first and supplies every shared file, including the Terraform Cloud
-// rewrite of main.ts. This hook only installs dependencies with pnpm and prints the help text.
+// rewrite of main.ts. This hook installs dependencies with pnpm, pins the pnpm version, and prints the help text.
 const packageManager = "pnpm";
 
+const minimumMajor = 10;
+
 exports.pre = () => {
-  const probe = process.platform === "win32" ? "where" : "which";
-  try {
-    execSync(`${probe} ${packageManager}`, { stdio: "ignore" });
-  } catch {
+  const version = packageManagerVersion();
+  if (!version) {
     throw new Error(
       `Could not find "${packageManager}" on your PATH. Install it (e.g. "corepack enable ${packageManager}") and run cdktn init again.`
+    );
+  }
+  if (Number(version.split(".")[0]) < minimumMajor) {
+    throw new Error(
+      `${packageManager} ${version} is too old: this template needs ${packageManager} ${minimumMajor} or newer (its pnpm-workspace.yaml approves dependency build scripts, which older versions do not understand).`
     );
   }
 };
@@ -47,7 +52,7 @@ exports.post = (ctx) => {
     silent
   );
 
-  pinPackageManager();
+  pinPackageManager(packageManagerVersion());
 
   if (!silent) {
     console.log(readFileSync("./help", "utf-8"));
@@ -59,7 +64,17 @@ exports.post = (ctx) => {
  * on the project. The version is read at scaffold time rather than baked into the template, which would go stale
  * with every release.
  */
-function pinPackageManager() {
+function pinPackageManager(version) {
+  if (!version) {
+    return;
+  }
+
+  const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
+  pkg.packageManager = `${packageManager}@${version}`;
+  writeFileSync("./package.json", `${JSON.stringify(pkg, null, 2)}\n`, "utf-8");
+}
+
+function packageManagerVersion() {
   let version;
   try {
     version = execSync(`${packageManager} --version`, {
@@ -67,17 +82,11 @@ function pinPackageManager() {
       stdio: ["ignore", "pipe", "ignore"],
     }).trim();
   } catch {
-    return;
+    return undefined;
   }
 
-  // Anything but a plain version (a corepack passthrough message, say) is not safe to pin.
-  if (!/^\d+\.\d+\.\d+/.test(version)) {
-    return;
-  }
-
-  const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
-  pkg.packageManager = `${packageManager}@${version}`;
-  writeFileSync("./package.json", `${JSON.stringify(pkg, null, 2)}\n`, "utf-8");
+  // Anything but a plain version (a corepack passthrough message, say) is not safe to rely on.
+  return /^\d+\.\d+\.\d+/.test(version) ? version : undefined;
 }
 
 function installDeps(deps, isDev, silent) {

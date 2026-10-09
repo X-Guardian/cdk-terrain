@@ -23,12 +23,14 @@ describe("Templates", () => {
     it("only overlays the files that differ from the base template", () => {
       expect(readdirSync(path.join(templatesDir, template)).sort()).toEqual([
         ".hooks.sscaff.js",
+        "cdktf.json",
         "help",
         "package.json",
+        "pnpm-workspace.yaml",
       ]);
     });
 
-    it.each(["help", "package.json"])(
+    it.each(["cdktf.json", "help", "package.json"])(
       "%s drives the project with its own package manager",
       (file) => {
         const contents = readFileSync(
