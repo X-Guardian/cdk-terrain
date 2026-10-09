@@ -6,7 +6,10 @@
 const { execSync } = require("child_process");
 const { readFileSync, writeFileSync } = require("fs");
 
-exports.pre = () => {
+exports.pre = (ctx) => {
+  if (ctx.isOverlayBase === "true") {
+    return;
+  }
   requirePackageManager("npm");
 };
 

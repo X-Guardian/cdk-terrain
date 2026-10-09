@@ -15,27 +15,17 @@ describe("Templates", () => {
     });
   });
 
-  // The package-manager variants overlay the `typescript` template, so they must carry only the files that
-  // actually differ - anything else silently shadows the base and has to be kept in sync by hand.
-  describe.each([
-    ["typescript-pnpm", "pnpm", [".hooks.sscaff.js", "help", "package.json"]],
-    [
-      "typescript-yarn",
-      "yarn",
-      // Yarn also needs the node-modules linker (it defaults to Plug'n'Play) and ignores of its own state files.
-      [
+  // `typescript-pnpm` overlays the `typescript` template, so it must carry only the files that actually differ -
+  // anything else silently shadows the base and has to be kept in sync by hand.
+  describe("typescript-pnpm", () => {
+    const template = "typescript-pnpm";
+
+    it("only overlays the files that differ from the base template", () => {
+      expect(readdirSync(path.join(templatesDir, template)).sort()).toEqual([
         ".hooks.sscaff.js",
-        ".yarnrc.yml",
         "help",
         "package.json",
-        "{{}}.gitignore",
-      ],
-    ],
-  ])("%s", (template, packageManager, expectedFiles) => {
-    it("only overlays the files that differ from the base template", () => {
-      expect(readdirSync(path.join(templatesDir, template)).sort()).toEqual(
-        expectedFiles,
-      );
+      ]);
     });
 
     it.each(["help", "package.json"])(
@@ -46,7 +36,7 @@ describe("Templates", () => {
           "utf8",
         );
 
-        expect(contents).toContain(packageManager);
+        expect(contents).toContain("pnpm");
         // The npmjs.com search URL is a registry link rather than a command, so it legitimately survives.
         expect(
           contents.replace(/https:\/\/www\.npmjs\.com\S*/g, ""),

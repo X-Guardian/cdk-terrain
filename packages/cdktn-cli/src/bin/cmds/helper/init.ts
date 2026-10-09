@@ -16,6 +16,8 @@ import {
   Project,
   CdktfConfig,
   getAllPrebuiltProviders,
+  detectNodePackageManager,
+  nodePackageManagerCommand,
 } from "@cdktn/cli-core";
 import {
   convertProject,
@@ -48,20 +50,9 @@ const chalkColour = new chalk.Instance();
 
 const isReadme = (file: string) => file.toLowerCase() === "readme.md";
 
-// Matches the `typescript` template and its package-manager variants (`typescript-pnpm`, `typescript-yarn`).
+// Matches the `typescript` template and its package-manager variants (e.g. `typescript-pnpm`).
 const isTypescriptTemplate = (name: string) =>
   name === "typescript" || name.startsWith("typescript-");
-
-// The package manager a TypeScript template scaffolds with, used to run scripts in the generated project.
-function packageManagerFor(templateName: string): string {
-  if (templateName === "typescript-pnpm") {
-    return "pnpm";
-  }
-  if (templateName === "typescript-yarn") {
-    return "yarn";
-  }
-  return "npm";
-}
 
 export function checkForEmptyDirectory(dir: string) {
   if (
@@ -283,10 +274,10 @@ This means that your Terraform state file will be stored locally on disk in a fi
       if (argv.silent) {
         runGetOptions.stdio = "ignore";
       }
-      execSync(
-        `${packageManagerFor(templateInfo.Name)} run get`,
-        runGetOptions,
+      const command = nodePackageManagerCommand(
+        detectNodePackageManager(destination),
       );
+      execSync(`${command} run get`, runGetOptions);
     }
 
     telemetryData.conversionStats = stats;

@@ -52,7 +52,6 @@ export const templatesDir = path.join(__dirname, "..", "..", "templates");
 // template first and then overlaying their own files on top, so the shared files live in exactly one place.
 const TEMPLATE_OVERLAY_BASE: Record<string, string> = {
   "typescript-pnpm": "typescript",
-  "typescript-yarn": "typescript",
 };
 
 const availableTemplates = fs
