@@ -113,6 +113,18 @@ describe("package-manager", () => {
         ["add", "@cdktn/provider-random@1.0.0", "--silent", "-E"],
       ],
       [
+        "yarn classic",
+        { "yarn.lock": "" },
+        "yarn",
+        [
+          "add",
+          "@cdktn/provider-random@1.0.0",
+          "--silent",
+          "--no-progress",
+          "-E",
+        ],
+      ],
+      [
         "yarn berry",
         { "package.json": pkg("yarn@4.5.0") },
         "yarn",

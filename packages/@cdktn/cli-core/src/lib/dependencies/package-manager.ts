@@ -362,11 +362,11 @@ class NodePackageManager extends PackageManager {
     );
 
     // Quiet flags differ per manager: pnpm has no --no-progress, and Yarn Berry errors on unknown options - it has
-    // neither --silent nor --no-progress (Yarn 1 accepted both).
+    // neither --silent nor --no-progress (Yarn 1 accepts both).
     if (silent) {
-      if (command === "npm") {
+      if (this.packageManager === "npm" || this.packageManager === "yarn") {
         args.push("--silent", "--no-progress");
-      } else if (command === "pnpm") {
+      } else if (this.packageManager === "pnpm") {
         args.push("--silent");
       }
     }

@@ -10,7 +10,8 @@ const { readFileSync, writeFileSync } = require("fs");
 // rewrite of main.ts. This hook installs dependencies with pnpm, pins the pnpm version, and prints the help text.
 const packageManager = "pnpm";
 
-const minimumMajor = 10;
+// pnpm-workspace.yaml approves dependency build scripts with `allowBuilds`, which older versions ignore.
+const minimumVersion = [10, 26];
 
 exports.pre = () => {
   const version = packageManagerVersion();
@@ -19,9 +20,11 @@ exports.pre = () => {
       `Could not find "${packageManager}" on your PATH. Install it (e.g. "corepack enable ${packageManager}") and run cdktn init again.`
     );
   }
-  if (Number(version.split(".")[0]) < minimumMajor) {
+  const [major, minor] = version.split(".").map(Number);
+  const [minMajor, minMinor] = minimumVersion;
+  if (major < minMajor || (major === minMajor && minor < minMinor)) {
     throw new Error(
-      `${packageManager} ${version} is too old: this template needs ${packageManager} ${minimumMajor} or newer (its pnpm-workspace.yaml approves dependency build scripts, which older versions do not understand).`
+      `${packageManager} ${version} is too old: this template needs ${packageManager} ${minMajor}.${minMinor} or newer.`
     );
   }
 };

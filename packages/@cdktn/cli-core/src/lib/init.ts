@@ -93,6 +93,14 @@ export async function init({
   };
 
   if (overlayBase) {
+    // The overlay's own pre hook runs first so a missing prerequisite (its package manager, say) fails before the
+    // base template has written anything; sscaff runs it again on the overlay pass, which is harmless.
+    const overlayHooks = path.join(templatePath, ".hooks.sscaff.js");
+    if (fs.existsSync(overlayHooks)) {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      await require(overlayHooks).pre?.(variables);
+    }
+
     // `isOverlayBase` tells the base template's hook to lay down files only: the overlay replaces package.json, so
     // installing here would use the wrong package manager and leave a stray lockfile behind.
     await sscaff(path.join(templatesDir, overlayBase), destination, {
