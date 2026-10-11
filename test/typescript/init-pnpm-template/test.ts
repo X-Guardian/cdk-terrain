@@ -85,16 +85,29 @@ describe("typescript-pnpm init template with an unusable pnpm", () => {
     ["missing", undefined, 'Could not find "pnpm"'],
   ])("pnpm %s", (_, shim, message) => {
     onPosix(
-      "fails before writing anything",
+      "fails without writing anything and keeps what was already there",
       async () => {
         const driver = new TestDriver(__dirname);
         driver.shadowBinary("pnpm", shim);
         driver.switchToTempDir();
+        // Entries the empty-directory check allows a new project to start with.
+        fs.mkdirSync(path.join(driver.workingDirectory, ".git"));
+        fs.writeFileSync(
+          path.join(driver.workingDirectory, ".git", "HEAD"),
+          "",
+        );
+        fs.writeFileSync(path.join(driver.workingDirectory, "README.md"), "");
 
         await expect(driver.init("typescript-pnpm")).rejects.toMatchObject({
           stderr: expect.stringContaining(message),
         });
-        expect(fs.readdirSync(driver.workingDirectory)).toEqual([]);
+        expect(fs.readdirSync(driver.workingDirectory).sort()).toEqual([
+          ".git",
+          "README.md",
+        ]);
+        expect(
+          fs.existsSync(path.join(driver.workingDirectory, ".git", "HEAD")),
+        ).toBe(true);
       },
       120_000,
     );

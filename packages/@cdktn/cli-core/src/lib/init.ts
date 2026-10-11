@@ -114,9 +114,14 @@ export async function init({
   if (variant) {
     // The variant's files go first because the base post hook installs dependencies, which may need them
     // (pnpm-workspace.yaml). When the base pass fails before writing anything, its pre hook rejected a
-    // prerequisite, and the directory is left as empty as a single-template failure leaves it.
+    // prerequisite, and only the variant's files are taken back; whatever the directory held before init
+    // (a .git directory, a README) is left alone, as is a partial scaffold.
+    const entries = () =>
+      fs.existsSync(destination) ? fs.readdirSync(destination) : [];
+    const before = entries();
     await sscaff(templatePath, destination, variables);
-    const variantFiles = fs.readdirSync(destination);
+    const afterVariant = entries();
+    const addedByVariant = afterVariant.filter((f) => !before.includes(f));
     try {
       await sscaff(
         path.join(templatesDir, variant.base),
@@ -124,12 +129,12 @@ export async function init({
         variables,
       );
     } catch (e) {
-      const written = fs.readdirSync(destination);
+      const now = entries();
       const baseWroteNothing =
-        written.length === variantFiles.length &&
-        written.every((file) => variantFiles.includes(file));
+        now.length === afterVariant.length &&
+        now.every((f) => afterVariant.includes(f));
       if (baseWroteNothing) {
-        for (const file of variantFiles) {
+        for (const file of addedByVariant) {
           fs.removeSync(path.join(destination, file));
         }
       }
