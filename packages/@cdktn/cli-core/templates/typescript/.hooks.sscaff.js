@@ -128,7 +128,9 @@ function packageManagerVersion(packageManager) {
   }
 
   // Anything but a plain version (a corepack passthrough message, say) is not safe to rely on.
-  return /^\d+\.\d+\.\d+/.test(version) ? version : undefined;
+  return /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/.test(version)
+    ? version
+    : undefined;
 }
 
 function installDeps(pmAdd, deps, isDev, silent) {

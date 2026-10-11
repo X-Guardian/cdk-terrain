@@ -31,6 +31,15 @@ describe("detectNodePackageManager", () => {
       { "package.json": pkg("yarn@4.5.0+sha512.abc") },
       "yarn-berry",
     ],
+    [
+      "yarn field pinned to a scoped registry URL",
+      {
+        "package.json": pkg(
+          "yarn@https://registry.npmjs.org/@yarnpkg/cli-dist/-/cli-dist-4.1.0.tgz",
+        ),
+      },
+      "yarn-berry",
+    ],
     ["pnpm-lock.yaml", { "pnpm-lock.yaml": "" }, "pnpm"],
     ["yarn.lock alone", { "yarn.lock": "" }, "yarn"],
     [

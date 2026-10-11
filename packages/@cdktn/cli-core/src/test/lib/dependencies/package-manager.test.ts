@@ -117,10 +117,12 @@ describe("package-manager", () => {
     );
 
     it("lists direct provider dependencies from pnpm", async () => {
+      const dir = projectWith({ "pnpm-lock.yaml": "" });
       execMock.mockResolvedValue(
         JSON.stringify([
           {
             name: "my-project",
+            path: dir,
             dependencies: {
               "@cdktn/provider-random": { version: "3.0.11" },
               cdktn: { version: "0.22.0" },
@@ -134,13 +136,34 @@ describe("package-manager", () => {
 
       const packages = await PackageManager.forLanguage(
         Language.TYPESCRIPT,
-        projectWith({ "pnpm-lock.yaml": "" }),
+        dir,
       ).listProviderPackages();
 
       expect(packages).toEqual([
         { name: "@cdktn/provider-random", version: "3.0.11" },
         { name: "@cdktf/provider-null", version: "10.0.0" },
       ]);
+    });
+
+    it("ignores providers installed in sibling workspace projects", async () => {
+      const dir = projectWith({ "pnpm-lock.yaml": "" });
+      execMock.mockResolvedValue(
+        JSON.stringify([
+          {
+            name: "workspace-root",
+            path: join(dir, ".."),
+            dependencies: { "@cdktn/provider-aws": { version: "22.0.0" } },
+          },
+          { name: "my-project", path: dir, dependencies: {} },
+        ]),
+      );
+
+      const packages = await PackageManager.forLanguage(
+        Language.TYPESCRIPT,
+        dir,
+      ).listProviderPackages();
+
+      expect(packages).toEqual([]);
     });
 
     it("refuses to list providers for Yarn Berry, pointing at the tracking issue", async () => {

@@ -209,6 +209,7 @@ const pipPackageSchema = z.array(
 const pnpmListSchema = z.array(
   z
     .object({
+      path: z.string(),
       dependencies: z.record(
         z.string(),
         z.object({ version: z.string() }).loose(),
@@ -221,6 +222,14 @@ const pnpmListSchema = z.array(
     .partial()
     .loose(),
 );
+
+function isSameDirectory(a: string, b: string): boolean {
+  try {
+    return fs.realpathSync(a) === fs.realpathSync(b);
+  } catch {
+    return path.resolve(a) === path.resolve(b);
+  }
+}
 
 let yarnDeprecationWarned = false;
 
@@ -411,11 +420,21 @@ class NodePackageManager extends PackageManager {
       logger.debug(`Listing pnpm packages using "pnpm list --json": ${stdout}`);
       const json = pnpmListSchema.parse(JSON.parse(stdout));
 
-      return json
-        .flatMap((project) => [
-          ...Object.entries(project.dependencies || {}),
-          ...Object.entries(project.devDependencies || {}),
-        ])
+      // Inside a workspace pnpm reports every project, not only the one in cwd.
+      const project =
+        json.find(
+          (entry) =>
+            entry.path !== undefined &&
+            isSameDirectory(entry.path, this.workingDirectory),
+        ) ?? (json.length === 1 ? json[0] : undefined);
+      if (!project) {
+        throw new Error(`no entry for ${this.workingDirectory}`);
+      }
+
+      return [
+        ...Object.entries(project.dependencies || {}),
+        ...Object.entries(project.devDependencies || {}),
+      ]
         .filter(
           ([depName]) =>
             depName.startsWith("@cdktf/provider-") ||

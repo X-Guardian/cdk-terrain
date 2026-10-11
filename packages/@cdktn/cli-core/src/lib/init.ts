@@ -92,10 +92,14 @@ export async function init({
   providersForceLocal,
   silent,
 }: InitArgs) {
-  const templateName = path.basename(templatePath);
-  const variant = TEMPLATE_VARIANTS[templateName];
+  // A remote template name should not collide with a template shipped with the CLI
+  const builtInName =
+    path.dirname(path.resolve(templatePath)) === path.resolve(templatesDir)
+      ? path.basename(templatePath)
+      : undefined;
+  const variant = builtInName ? TEMPLATE_VARIANTS[builtInName] : undefined;
 
-  const deps: any = await determineDeps(cdktfVersion, dist, templateName);
+  const deps: any = await determineDeps(cdktfVersion, dist, builtInName);
 
   const futureFlags = Object.entries(FUTURE_FLAGS)
     .map(([key, value]) => `    "${key}": "${value}"`)
@@ -104,7 +108,7 @@ export async function init({
   const variables = {
     ...DEFAULT_TEMPLATE_VARIABLES,
     ...variant?.variables,
-    ...(variant ? { variant: templateName } : {}),
+    ...(variant ? { variant: builtInName } : {}),
     ...deps,
     ...projectInfo,
     futureFlags,

@@ -34,7 +34,9 @@ export function detectNodePackageManager(dir: string): NodePackageManagerName {
   }
 
   if (typeof declared === "string") {
-    const [name, version] = declared.split("@");
+    const at = declared.indexOf("@");
+    const name = at === -1 ? declared : declared.slice(0, at);
+    const version = at === -1 ? "" : declared.slice(at + 1);
     if (name === "npm" || name === "pnpm") {
       return name;
     }
