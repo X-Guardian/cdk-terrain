@@ -55,7 +55,8 @@ const DEFAULT_TEMPLATE_VARIABLES: Record<string, string> = {
   pmExec: "npx",
 };
 
-// Templates consuming the template variables. A variant directory carries only the files the base lacks.
+// Templates consuming the template variables. A variant directory carries only the files the base lacks and has no
+// hooks of its own; the base hook copies them in before it installs dependencies.
 const TEMPLATE_VARIANTS: Record<
   string,
   { base: string; variables: Record<string, string> }
@@ -103,6 +104,7 @@ export async function init({
   const variables = {
     ...DEFAULT_TEMPLATE_VARIABLES,
     ...variant?.variables,
+    ...(variant ? { variant: templateName } : {}),
     ...deps,
     ...projectInfo,
     futureFlags,
@@ -111,38 +113,11 @@ export async function init({
     silent,
   };
 
-  if (variant) {
-    // The variant's files go first because the base post hook installs dependencies, which may need them
-    // (pnpm-workspace.yaml). When the base pass fails before writing anything, its pre hook rejected a
-    // prerequisite, and only the variant's files are taken back; whatever the directory held before init
-    // (a .git directory, a README) is left alone, as is a partial scaffold.
-    const entries = () =>
-      fs.existsSync(destination) ? fs.readdirSync(destination) : [];
-    const before = entries();
-    await sscaff(templatePath, destination, variables);
-    const afterVariant = entries();
-    const addedByVariant = afterVariant.filter((f) => !before.includes(f));
-    try {
-      await sscaff(
-        path.join(templatesDir, variant.base),
-        destination,
-        variables,
-      );
-    } catch (e) {
-      const now = entries();
-      const baseWroteNothing =
-        now.length === afterVariant.length &&
-        now.every((f) => afterVariant.includes(f));
-      if (baseWroteNothing) {
-        for (const file of addedByVariant) {
-          fs.removeSync(path.join(destination, file));
-        }
-      }
-      throw e;
-    }
-  } else {
-    await sscaff(templatePath, destination, variables);
-  }
+  await sscaff(
+    variant ? path.join(templatesDir, variant.base) : templatePath,
+    destination,
+    variables,
+  );
   const cdktfConfig = CdktfConfig.read(destination);
 
   let needsGet = false;

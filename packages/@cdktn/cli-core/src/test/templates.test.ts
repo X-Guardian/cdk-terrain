@@ -16,7 +16,7 @@ describe("Templates", () => {
   });
 
   // The package-manager variants reuse the `typescript` files through template variables. A file duplicated into a
-  // variant directory is overwritten by the base, and a literal npm command in the base leaks into every variant.
+  // variant directory silently replaces the base's copy, and a literal npm command in the base leaks into every variant.
   describe("typescript-pnpm", () => {
     it("does not shadow any file of the base template", () => {
       const baseFiles = readdirSync(path.join(templatesDir, "typescript"));

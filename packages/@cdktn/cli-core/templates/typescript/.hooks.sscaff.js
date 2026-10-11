@@ -4,7 +4,8 @@
  */
 
 const { execSync } = require("child_process");
-const { readFileSync, writeFileSync } = require("fs");
+const { cpSync, readFileSync, writeFileSync } = require("fs");
+const path = require("path");
 
 // pnpm-workspace.yaml approves dependency build scripts with `allowBuilds`, which older versions ignore.
 const minimumPnpmVersion = [10, 26];
@@ -37,6 +38,12 @@ exports.post = (ctx) => {
   const npm_cdktf = ctx.npm_cdktf;
   if (!npm_cdktf) {
     throw new Error(`missing context "npm_cdktf"`);
+  }
+
+  // A variant (a sibling template directory such as typescript-pnpm) contributes the files this template lacks,
+  // and they have to be in place before the install below reads them.
+  if (ctx.variant) {
+    cpSync(path.join(__dirname, "..", ctx.variant), ".", { recursive: true });
   }
 
   // `constructs@10` resolves to the newest 10.x, which satisfies the `^10.6.0`
