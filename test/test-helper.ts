@@ -110,6 +110,22 @@ export class TestDriver {
     );
   }
 
+  /**
+   * Puts a fake `name` executable first on this driver's PATH, or hides the real one when no script is given.
+   * Node stays reachable through the same directory, since the real one may live beside the hidden binary.
+   */
+  shadowBinary = (name: string, script?: string) => {
+    const shims = fs.mkdtempSync(path.join(os.tmpdir(), "cdktn-shim-"));
+    fs.symlinkSync(process.execPath, path.join(shims, "node"));
+    if (script) {
+      fs.writeFileSync(path.join(shims, name), script, { mode: 0o755 });
+    }
+    const visible = this.env.PATH.split(path.delimiter).filter(
+      (dir) => script || !fs.existsSync(path.join(dir, name)),
+    );
+    this.env.PATH = [shims, ...visible].join(path.delimiter);
+  };
+
   public async exec(
     command: string,
     args: string[] = [],

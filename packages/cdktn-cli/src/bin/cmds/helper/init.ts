@@ -16,8 +16,6 @@ import {
   Project,
   CdktfConfig,
   getAllPrebuiltProviders,
-  detectNodePackageManager,
-  nodePackageManagerCommand,
 } from "@cdktn/cli-core";
 import {
   convertProject,
@@ -38,6 +36,8 @@ import {
   Errors,
   sendTelemetry,
   ConstructsMakerProviderTarget,
+  detectNodePackageManager,
+  nodePackageManagerCommand,
 } from "@cdktn/commons";
 import { templates, templatesDir } from "@cdktn/cli-core";
 import ciDetect from "@npmcli/ci-detect";

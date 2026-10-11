@@ -10,6 +10,7 @@ export * from "./errors";
 export * from "./gradle";
 export * from "./logging";
 export * from "./module-schema";
+export * from "./node-package-manager";
 export * from "./provider-schema";
 export * from "./registry";
 export * from "./terraform-module";

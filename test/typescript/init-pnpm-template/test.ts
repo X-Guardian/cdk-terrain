@@ -2,7 +2,11 @@
 // SPDX-License-Identifier: MPL-2.0
 import * as fs from "fs";
 import * as path from "path";
-import { TestDriver, packageJsonWithDependency } from "../../test-helper";
+import {
+  TestDriver,
+  onPosix,
+  packageJsonWithDependency,
+} from "../../test-helper";
 
 describe("typescript-pnpm init template", () => {
   let driver: TestDriver;
@@ -69,4 +73,54 @@ describe("typescript-pnpm init template", () => {
       ]);
     }, 120_000);
   });
+});
+
+describe("typescript-pnpm init template with an unusable pnpm", () => {
+  describe.each([
+    [
+      "too old",
+      '#!/bin/sh\n[ "$1" = "--version" ] && echo 9.15.0\n',
+      "pnpm 9.15.0 is too old",
+    ],
+    ["missing", undefined, 'Could not find "pnpm"'],
+  ])("pnpm %s", (_, shim, message) => {
+    onPosix(
+      "fails before writing anything",
+      async () => {
+        const driver = new TestDriver(__dirname);
+        driver.shadowBinary("pnpm", shim);
+        driver.switchToTempDir();
+
+        await expect(driver.init("typescript-pnpm")).rejects.toMatchObject({
+          stderr: expect.stringContaining(message),
+        });
+        expect(fs.readdirSync(driver.workingDirectory)).toEqual([]);
+      },
+      120_000,
+    );
+  });
+
+  onPosix(
+    "keeps the scaffolded files when the install fails",
+    async () => {
+      const driver = new TestDriver(__dirname);
+      driver.shadowBinary(
+        "pnpm",
+        '#!/bin/sh\nif [ "$1" = "--version" ]; then echo 11.5.2; exit 0; fi\necho "pnpm shim refuses: $*" >&2\nexit 1\n',
+      );
+      driver.switchToTempDir();
+
+      await expect(driver.init("typescript-pnpm")).rejects.toMatchObject({
+        stderr: expect.stringContaining("pnpm shim refuses"),
+      });
+      expect(fs.readdirSync(driver.workingDirectory)).toEqual(
+        expect.arrayContaining([
+          "main.ts",
+          "package.json",
+          "pnpm-workspace.yaml",
+        ]),
+      );
+    },
+    120_000,
+  );
 });

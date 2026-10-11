@@ -10,10 +10,7 @@ import {
   Dispatcher,
 } from "undici";
 import { Language, exec, logger } from "@cdktn/commons";
-import {
-  PackageManager,
-  detectNodePackageManager,
-} from "../../../lib/dependencies/package-manager";
+import { PackageManager } from "../../../lib/dependencies/package-manager";
 
 jest.mock("@cdktn/commons", () => ({
   ...jest.requireActual("@cdktn/commons"),
@@ -51,33 +48,6 @@ describe("package-manager", () => {
   afterEach(() => {
     mockAgent.assertNoPendingInterceptors();
     setGlobalDispatcher(originalDispatcher);
-  });
-
-  describe("detectNodePackageManager", () => {
-    it.each<[string, Record<string, string>, string]>([
-      ["npm field", { "package.json": pkg("npm@10.9.0") }, "npm"],
-      [
-        "pnpm field over a conflicting lockfile",
-        { "package.json": pkg("pnpm@11.5.2"), "yarn.lock": "" },
-        "pnpm",
-      ],
-      ["yarn@1 field", { "package.json": pkg("yarn@1.22.22") }, "yarn"],
-      [
-        "yarn@4 field",
-        { "package.json": pkg("yarn@4.5.0+sha512.abc") },
-        "yarn-berry",
-      ],
-      ["pnpm-lock.yaml", { "pnpm-lock.yaml": "" }, "pnpm"],
-      ["yarn.lock alone", { "yarn.lock": "" }, "yarn"],
-      [
-        "yarn.lock with .yarnrc.yml",
-        { "yarn.lock": "", ".yarnrc.yml": "" },
-        "yarn-berry",
-      ],
-      ["nothing", {}, "npm"],
-    ])("%s => %s", (_, files, expected) => {
-      expect(detectNodePackageManager(projectWith(files))).toBe(expected);
-    });
   });
 
   describe("NodePackageManager", () => {
@@ -208,7 +178,7 @@ describe("package-manager", () => {
 
         expect(warn).toHaveBeenCalledTimes(1);
         expect(warn.mock.calls[0][0]).toContain(
-          isolated.YARN_TRACKING_ISSUE_URL,
+          commons.YARN_TRACKING_ISSUE_URL,
         );
       });
     });

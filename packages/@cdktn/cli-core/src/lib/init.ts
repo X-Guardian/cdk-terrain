@@ -48,10 +48,27 @@ export type InitArgs = {
 
 export const templatesDir = path.join(__dirname, "..", "..", "templates");
 
-// Templates that only carry the files differing from another template. They are scaffolded by running the base
-// template first and then overlaying their own files on top, so the shared files live in exactly one place.
-const TEMPLATE_OVERLAY_BASE: Record<string, string> = {
-  "typescript-pnpm": "typescript",
+const DEFAULT_TEMPLATE_VARIABLES: Record<string, string> = {
+  packageManager: "npm",
+  pmRun: "npm run",
+  pmAdd: "npm install",
+  pmExec: "npx",
+};
+
+// Templates consuming the template variables. A variant directory carries only the files the base lacks.
+const TEMPLATE_VARIANTS: Record<
+  string,
+  { base: string; variables: Record<string, string> }
+> = {
+  "typescript-pnpm": {
+    base: "typescript",
+    variables: {
+      packageManager: "pnpm",
+      pmRun: "pnpm run",
+      pmAdd: "pnpm add",
+      pmExec: "pnpm exec",
+    },
+  },
 };
 
 const availableTemplates = fs
@@ -75,7 +92,7 @@ export async function init({
   silent,
 }: InitArgs) {
   const templateName = path.basename(templatePath);
-  const overlayBase = TEMPLATE_OVERLAY_BASE[templateName];
+  const variant = TEMPLATE_VARIANTS[templateName];
 
   const deps: any = await determineDeps(cdktfVersion, dist, templateName);
 
@@ -84,6 +101,8 @@ export async function init({
     .join(`,\n`);
 
   const variables = {
+    ...DEFAULT_TEMPLATE_VARIABLES,
+    ...variant?.variables,
     ...deps,
     ...projectInfo,
     futureFlags,
@@ -92,24 +111,33 @@ export async function init({
     silent,
   };
 
-  if (overlayBase) {
-    // The overlay's own pre hook runs first so a missing prerequisite (its package manager, say) fails before the
-    // base template has written anything; sscaff runs it again on the overlay pass, which is harmless.
-    const overlayHooks = path.join(templatePath, ".hooks.sscaff.js");
-    if (fs.existsSync(overlayHooks)) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      await require(overlayHooks).pre?.(variables);
+  if (variant) {
+    // The variant's files go first because the base post hook installs dependencies, which may need them
+    // (pnpm-workspace.yaml). When the base pass fails before writing anything, its pre hook rejected a
+    // prerequisite, and the directory is left as empty as a single-template failure leaves it.
+    await sscaff(templatePath, destination, variables);
+    const variantFiles = fs.readdirSync(destination);
+    try {
+      await sscaff(
+        path.join(templatesDir, variant.base),
+        destination,
+        variables,
+      );
+    } catch (e) {
+      const written = fs.readdirSync(destination);
+      const baseWroteNothing =
+        written.length === variantFiles.length &&
+        written.every((file) => variantFiles.includes(file));
+      if (baseWroteNothing) {
+        for (const file of variantFiles) {
+          fs.removeSync(path.join(destination, file));
+        }
+      }
+      throw e;
     }
-
-    // `isOverlayBase` tells the base template's hook to lay down files only: the overlay replaces package.json, so
-    // installing here would use the wrong package manager and leave a stray lockfile behind.
-    await sscaff(path.join(templatesDir, overlayBase), destination, {
-      ...variables,
-      isOverlayBase: "true",
-    });
+  } else {
+    await sscaff(templatePath, destination, variables);
   }
-
-  await sscaff(templatePath, destination, variables);
   const cdktfConfig = CdktfConfig.read(destination);
 
   let needsGet = false;
@@ -182,9 +210,9 @@ export async function determineDeps(
 
     // If we know the template, only validate its artifact; otherwise fall
     // back to validating everything (preserves prior behavior for unknown /
-    // remote templates). Overlay templates share their base's artifact.
+    // remote templates). Variants share their base's artifact.
     const distTemplate = template
-      ? (TEMPLATE_OVERLAY_BASE[template] ?? template)
+      ? (TEMPLATE_VARIANTS[template]?.base ?? template)
       : template;
     const keysToValidate: DistKey[] =
       distTemplate && distKeysByTemplate[distTemplate]

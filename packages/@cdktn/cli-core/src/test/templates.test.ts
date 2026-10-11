@@ -15,34 +15,31 @@ describe("Templates", () => {
     });
   });
 
-  // `typescript-pnpm` overlays the `typescript` template, so it must carry only the files that actually differ -
-  // anything else silently shadows the base and has to be kept in sync by hand.
+  // The package-manager variants reuse the `typescript` files through template variables. A file duplicated into a
+  // variant directory is overwritten by the base, and a literal npm command in the base leaks into every variant.
   describe("typescript-pnpm", () => {
-    const template = "typescript-pnpm";
+    it("does not shadow any file of the base template", () => {
+      const baseFiles = readdirSync(path.join(templatesDir, "typescript"));
+      const shadowed = readdirSync(
+        path.join(templatesDir, "typescript-pnpm"),
+      ).filter((file) => baseFiles.includes(file));
 
-    it("only overlays the files that differ from the base template", () => {
-      expect(readdirSync(path.join(templatesDir, template)).sort()).toEqual([
-        ".hooks.sscaff.js",
-        "cdktf.json",
-        "help",
-        "package.json",
-        "pnpm-workspace.yaml",
-      ]);
+      expect(shadowed).toEqual([]);
     });
 
     it.each(["cdktf.json", "help", "package.json"])(
-      "%s drives the project with its own package manager",
+      "the base template's %s takes its package manager commands from variables",
       (file) => {
         const contents = readFileSync(
-          path.join(templatesDir, template, file),
+          path.join(templatesDir, "typescript", file),
           "utf8",
         );
 
-        expect(contents).toContain("pnpm");
+        expect(contents).toMatch(/\{\{ pm(Run|Add|Exec) \}\}/);
         // The npmjs.com search URL is a registry link rather than a command, so it legitimately survives.
         expect(
           contents.replace(/https:\/\/www\.npmjs\.com\S*/g, ""),
-        ).not.toMatch(/\bnpm (run|install|i) /);
+        ).not.toMatch(/\b(npm (run|install|i) |npx )/);
       },
     );
   });
